@@ -7,22 +7,20 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
-local Compkiller = loadstring(game:HttpGet("https://raw.githubusercontent.com/4lpaca-pin/CompKiller/refs/heads/main/src/source.luau"))();
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
-local ConfigManager = Compkiller:ConfigManager({
-    Directory = "vyno.tech",
-    Config = "default"
-});
-
-Compkiller:Loader("rbxassetid://120245531583106", 1.0).yield();
+local Window = WindUI:CreateWindow({
+    Title = "NoctyraHub",
+    Icon = "rbxassetid://120245531583106",
+    Author = "Noctyra",
+    Folder = "NoctyraHub",
+    Transparent = true,
+    Theme = "Dark",
+    SideBarWidth = 170,
+    HasOutline = true,
+})
 
 local MenuKey = "LeftAlt"
-local Window = Compkiller.new({
-    Name = "vyno.tech",
-    Keybind = MenuKey,
-    Logo = "rbxassetid://120245531583106",
-    TextSize = 15,
-});
 
 local Settings = {
     Combat = {
@@ -409,15 +407,15 @@ if ok_mt and MT then
         if method == "SetPrimaryPartCFrame" then
             if Settings.Visuals.Viewmodel.Enabled then
                 -- Uncomment the line below to see what objects are calling this method
-                -- print("[vyno.tech] Method called on: " .. tostring(self) .. " | Parent: " .. tostring(self.Parent))
+                -- print("[NoctyraHub] Method called on: " .. tostring(self) .. " | Parent: " .. tostring(self.Parent))
                 
                 if self.Name:find("Arms") and self.Parent == Camera then
                      local s = Settings.Visuals.Viewmodel
                      local success, err = pcall(function()
                          args[1] = args[1] * CFrame.new(s.X, s.Y, s.Z) * CFrame.Angles(math.rad(s.Pitch), math.rad(s.Yaw), math.rad(s.Roll))
                      end)
-                     if not success then warn("[vyno.tech] Math Error: " .. err) end
-                     -- print("[vyno.tech] SUCCESS: Modified CFrame for " .. self.Name)
+                     if not success then warn("[NoctyraHub] Math Error: " .. err) end
+                     -- print("[NoctyraHub] SUCCESS: Modified CFrame for " .. self.Name)
                      return OldNC(self, unpack(args))
                 end
             end
@@ -759,214 +757,155 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-local CombatTab = Window:DrawTab({ Name = "Combat", Icon = "swords", EnableScrolling = true });
-local VisualsTab = Window:DrawTab({ Name = "Visuals", Icon = "eye", EnableScrolling = true });
-local MiscTab = Window:DrawTab({ Name = "Misc", Icon = "layers", EnableScrolling = true });
+local CombatTab = Window:Tab({ Title = "Combat", Icon = "sword" })
+local VisualsTab = Window:Tab({ Title = "Visuals", Icon = "eye" })
+local MiscTab = Window:Tab({ Title = "Misc", Icon = "box" })
+local SettingsTab = Window:Tab({ Title = "Settings", Icon = "settings" })
 
-local AimbotSection = CombatTab:DrawSection({ Name = "Aimbot", Position = 'left' });
+-- [[ COMBAT TAB ]]
+local AimbotSection = CombatTab:Section("Aimbot")
+AimbotSection:Toggle({ Name = "Enable Aimbot", Value = Settings.Combat.Aimbot.Enabled, Callback = function(v) Settings.Combat.Aimbot.Enabled = v end })
+AimbotSection:Dropdown({ Name = "Aim Part", Items = R15Parts, Value = Settings.Combat.Aimbot.AimPart, Callback = function(v) Settings.Combat.Aimbot.AimPart = v end })
+AimbotSection:Slider({ Name = "Smoothing", Min = 1, Max = 20, Value = Settings.Combat.Aimbot.Smoothing, Callback = function(v) Settings.Combat.Aimbot.Smoothing = v end })
+AimbotSection:Toggle({ Name = "Team Check", Value = Settings.Combat.Aimbot.TeamCheck, Callback = function(v) Settings.Combat.Aimbot.TeamCheck = v end })
+AimbotSection:Toggle({ Name = "Wall Check", Value = Settings.Combat.Aimbot.WallCheck, Callback = function(v) Settings.Combat.Aimbot.WallCheck = v end })
+AimbotSection:Toggle({ Name = "Always On", Value = Settings.Combat.Aimbot.AlwaysOn, Callback = function(v) Settings.Combat.Aimbot.AlwaysOn = v end })
+AimbotSection:Keybind({ Name = "Aim Key", Value = "MouseButton2", Callback = function(v) Settings.Combat.Aimbot.Keybind = v end })
 
-local AimToggle = AimbotSection:AddToggle({ Name = "Enable Aimbot", Flag = "Aim_Enabled", Default = false, Callback = function(v) Settings.Combat.Aimbot.Enabled = v end });
+local AimFOVSection = CombatTab:Section("Aimbot FOV")
+AimFOVSection:Toggle({ Name = "Draw FOV", Value = Settings.Combat.Aimbot.FOV.Enabled, Callback = function(v) Settings.Combat.Aimbot.FOV.Enabled = v end })
+AimFOVSection:Slider({ Name = "Radius", Min = 10, Max = 800, Value = Settings.Combat.Aimbot.FOV.Radius, Callback = function(v) Settings.Combat.Aimbot.FOV.Radius = v end })
+AimFOVSection:Colorpicker({ Name = "Color", Value = Settings.Combat.Aimbot.FOV.Color, Callback = function(v) Settings.Combat.Aimbot.FOV.Color = v end })
 
-local AimSettings = AimToggle.Link:AddOption();
-AimSettings:AddDropdown({ Name = "Aim Part", Values = R15Parts, Default = "Head", Flag = "Aim_Part", Callback = function(v) Settings.Combat.Aimbot.AimPart = v end });
-AimSettings:AddSlider({ Name = "Smoothing", Min = 1, Max = 20, Default = 5, Round = 1, Flag = "Aim_Smooth", Callback = function(v) Settings.Combat.Aimbot.Smoothing = v end });
-AimSettings:AddToggle({ Name = "Team Check", Flag = "Aim_TeamCheck", Default = false, Callback = function(v) Settings.Combat.Aimbot.TeamCheck = v end });
-AimSettings:AddToggle({ Name = "Wall Check", Flag = "Aim_WallCheck", Default = false, Callback = function(v) Settings.Combat.Aimbot.WallCheck = v end });
+local SilentSection = CombatTab:Section("Silent Aim")
+SilentSection:Toggle({ Name = "Enable Silent Aim", Value = Settings.Combat.SilentAim.Enabled, Callback = function(v) Settings.Combat.SilentAim.Enabled = v end })
+SilentSection:Dropdown({ Name = "Aim Part", Items = R15Parts, Value = Settings.Combat.SilentAim.AimPart, Callback = function(v) Settings.Combat.SilentAim.AimPart = v end })
+SilentSection:Slider({ Name = "Prediction", Min = 0, Max = 1, Step = 0.01, Value = Settings.Combat.SilentAim.Prediction, Callback = function(v) Settings.Combat.SilentAim.Prediction = v end })
+SilentSection:Toggle({ Name = "Team Check", Value = Settings.Combat.SilentAim.TeamCheck, Callback = function(v) Settings.Combat.SilentAim.TeamCheck = v end })
+SilentSection:Toggle({ Name = "Wall Check", Value = Settings.Combat.SilentAim.WallCheck, Callback = function(v) Settings.Combat.SilentAim.WallCheck = v end })
 
-AimbotSection:AddToggle({ Name = "Always On", Flag = "Aim_AlwaysOn", Default = false, Callback = function(v) Settings.Combat.Aimbot.AlwaysOn = v end });
-AimbotSection:AddKeybind({ Name = "Aim Key", Default = "MouseRight", Flag = "Aim_Key", Callback = function(v) Settings.Combat.Aimbot.Keybind = v end });
+local SilentFOVSection = CombatTab:Section("Silent Aim FOV")
+SilentFOVSection:Toggle({ Name = "Draw FOV", Value = Settings.Combat.SilentAim.FOV.Enabled, Callback = function(v) Settings.Combat.SilentAim.FOV.Enabled = v end })
+SilentFOVSection:Slider({ Name = "Radius", Min = 10, Max = 800, Value = Settings.Combat.SilentAim.FOV.Radius, Callback = function(v) Settings.Combat.SilentAim.FOV.Radius = v end })
+SilentFOVSection:Colorpicker({ Name = "Color", Value = Settings.Combat.SilentAim.FOV.Color, Callback = function(v) Settings.Combat.SilentAim.FOV.Color = v end })
 
-local FOVToggle = AimbotSection:AddToggle({ Name = "Draw FOV", Flag = "Aim_FOVEnabled", Default = false, Callback = function(v) Settings.Combat.Aimbot.FOV.Enabled = v end });
-local FOVSettings = FOVToggle.Link:AddOption();
-FOVSettings:AddSlider({ Name = "Radius", Min = 10, Max = 800, Default = 100, Round = 0, Flag = "Aim_FOVRadius", Callback = function(v) Settings.Combat.Aimbot.FOV.Radius = v end });
-FOVSettings:AddColorPicker({ Name = "Color", Default = Color3.fromRGB(255, 255, 255), Flag = "Aim_FOVColor", Callback = function(v) Settings.Combat.Aimbot.FOV.Color = v end });
-
-local SilentSection = CombatTab:DrawSection({ Name = "Silent Aim", Position = 'right' });
-
-local SilentToggle = SilentSection:AddToggle({ Name = "Enable Silent Aim", Flag = "Silent_Enabled", Default = false, Callback = function(v) Settings.Combat.SilentAim.Enabled = v end });
-local SilentSettings = SilentToggle.Link:AddOption();
-
-SilentSettings:AddDropdown({ Name = "Aim Part", Values = R15Parts, Default = "Head", Flag = "Silent_Part", Callback = function(v) Settings.Combat.SilentAim.AimPart = v end });
-SilentSettings:AddSlider({ Name = "Prediction", Min = 0, Max = 1, Default = 0, Round = 2, Flag = "Silent_Pred", Callback = function(v) Settings.Combat.SilentAim.Prediction = v end });
-SilentSettings:AddToggle({ Name = "Team Check", Flag = "Silent_TeamCheck", Default = false, Callback = function(v) Settings.Combat.SilentAim.TeamCheck = v end });
-SilentSettings:AddToggle({ Name = "Wall Check", Flag = "Silent_WallCheck", Default = false, Callback = function(v) Settings.Combat.SilentAim.WallCheck = v end });
-
-local SilentFOVToggle = SilentSection:AddToggle({ Name = "Draw FOV", Flag = "Silent_FOVEnabled", Default = false, Callback = function(v) Settings.Combat.SilentAim.FOV.Enabled = v end });
-local SilentFOVSettings = SilentFOVToggle.Link:AddOption();
-SilentFOVSettings:AddSlider({ Name = "Radius", Min = 10, Max = 800, Default = 100, Round = 0, Flag = "Silent_FOVRadius", Callback = function(v) Settings.Combat.SilentAim.FOV.Radius = v end });
-SilentFOVSettings:AddColorPicker({ Name = "Color", Default = Color3.fromRGB(255, 0, 0), Flag = "Silent_FOVColor", Callback = function(v) Settings.Combat.SilentAim.FOV.Color = v end });
-
-
-local AASection = CombatTab:DrawSection({ Name = "Anti-Aim", Position = 'left' });
-
-local AAToggle = AASection:AddToggle({ Name = "Enable Anti-Aim", Flag = "AA_Enabled", Default = false, Callback = function(v) Settings.Combat.AntiAim.Enabled = v if not v then CleanupGhost() end end });
-local AASettings = AAToggle.Link:AddOption();
-
-AASettings:AddDropdown({ Name = "Method", Values = {"Static", "Jitter", "Spin", "Orbit"}, Default = "Static", Flag = "AA_Method", Callback = function(v) Settings.Combat.AntiAim.Method = v end });
-AASettings:AddDropdown({ Name = "Yaw Base", Values = {"Camera", "0", "90", "180", "-90", "At Players"}, Default = "Camera", Flag = "AA_YawBase", Callback = function(v) Settings.Combat.AntiAim.YawBase = v end });
-AASettings:AddDropdown({ Name = "Pitch", Values = {"Zero", "Up", "Down"}, Default = "Zero", Flag = "AA_Pitch", Callback = function(v) Settings.Combat.AntiAim.Pitch = v end });
-
-AASettings:AddToggle({ Name = "Show Ghost", Flag = "AA_Ghost", Default = false, Callback = function(v) Settings.Combat.AntiAim.ShowVisuals = v if not v then CleanupGhost() end end });
-AASettings:AddToggle({ Name = "Client Sided", Flag = "AA_Client", Default = false, Callback = function(v) Settings.Combat.AntiAim.ClientSided = v end });
-AASettings:AddSlider({ Name = "Yaw Offset", Min = -180, Max = 180, Default = 0, Round = 0, Flag = "AA_Yaw", Callback = function(v) Settings.Combat.AntiAim.YawOffset = v end });
-
-AASettings:AddSlider({ Name = "Jitter Angle", Min = 10, Max = 180, Default = 45, Round = 0, Flag = "AA_JitterAngle", Callback = function(v) Settings.Combat.AntiAim.JitterAngle = v end });
-AASettings:AddSlider({ Name = "Spin Speed", Min = 1, Max = 100, Default = 20, Round = 0, Flag = "AA_SpinSpeed", Callback = function(v) Settings.Combat.AntiAim.SpinSpeed = v end });
-AASettings:AddSlider({ Name = "Orbit Radius", Min = 1, Max = 20, Default = 5, Round = 0, Flag = "AA_OrbitRadius", Callback = function(v) Settings.Combat.AntiAim.OrbitRadius = v end });
-AASettings:AddSlider({ Name = "Orbit Speed", Min = 1, Max = 50, Default = 5, Round = 1, Flag = "AA_OrbitSpeed", Callback = function(v) Settings.Combat.AntiAim.OrbitSpeed = v end });
+local AASection = CombatTab:Section("Anti-Aim")
+AASection:Toggle({ Name = "Enable Anti-Aim", Value = Settings.Combat.AntiAim.Enabled, Callback = function(v) Settings.Combat.AntiAim.Enabled = v; if not v then CleanupGhost() end end })
+AASection:Dropdown({ Name = "Method", Items = {"Static", "Jitter", "Spin", "Orbit"}, Value = Settings.Combat.AntiAim.Method, Callback = function(v) Settings.Combat.AntiAim.Method = v end })
+AASection:Dropdown({ Name = "Yaw Base", Items = {"Camera", "0", "90", "180", "-90", "At Players"}, Value = Settings.Combat.AntiAim.YawBase, Callback = function(v) Settings.Combat.AntiAim.YawBase = v end })
+AASection:Dropdown({ Name = "Pitch", Items = {"Zero", "Up", "Down"}, Value = Settings.Combat.AntiAim.Pitch, Callback = function(v) Settings.Combat.AntiAim.Pitch = v end })
+AASection:Toggle({ Name = "Show Ghost", Value = Settings.Combat.AntiAim.ShowVisuals, Callback = function(v) Settings.Combat.AntiAim.ShowVisuals = v; if not v then CleanupGhost() end end })
+AASection:Toggle({ Name = "Client Sided", Value = Settings.Combat.AntiAim.ClientSided, Callback = function(v) Settings.Combat.AntiAim.ClientSided = v end })
+AASection:Slider({ Name = "Yaw Offset", Min = -180, Max = 180, Value = Settings.Combat.AntiAim.YawOffset, Callback = function(v) Settings.Combat.AntiAim.YawOffset = v end })
+AASection:Slider({ Name = "Jitter Angle", Min = 10, Max = 180, Value = Settings.Combat.AntiAim.JitterAngle, Callback = function(v) Settings.Combat.AntiAim.JitterAngle = v end })
+AASection:Slider({ Name = "Spin Speed", Min = 1, Max = 100, Value = Settings.Combat.AntiAim.SpinSpeed, Callback = function(v) Settings.Combat.AntiAim.SpinSpeed = v end })
+AASection:Slider({ Name = "Orbit Radius", Min = 1, Max = 20, Value = Settings.Combat.AntiAim.OrbitRadius, Callback = function(v) Settings.Combat.AntiAim.OrbitRadius = v end })
+AASection:Slider({ Name = "Orbit Speed", Min = 1, Max = 50, Value = Settings.Combat.AntiAim.OrbitSpeed, Callback = function(v) Settings.Combat.AntiAim.OrbitSpeed = v end })
 
 
-local ESPSection = VisualsTab:DrawSection({ Name = "ESP", Position = 'left' });
+-- [[ VISUALS TAB ]]
+local ESPSection = VisualsTab:Section("ESP General")
+ESPSection:Toggle({ Name = "Enable ESP", Value = Settings.Visuals.ESP.Enabled, Callback = function(v) Settings.Visuals.ESP.Enabled = v end })
+ESPSection:Toggle({ Name = "Boxes", Value = Settings.Visuals.ESP.Boxes, Callback = function(v) Settings.Visuals.ESP.Boxes = v end })
+ESPSection:Toggle({ Name = "Health Bar", Value = Settings.Visuals.ESP.HealthBar, Callback = function(v) Settings.Visuals.ESP.HealthBar = v end })
+ESPSection:Toggle({ Name = "Names", Value = Settings.Visuals.ESP.Names, Callback = function(v) Settings.Visuals.ESP.Names = v end })
+ESPSection:Toggle({ Name = "Distance", Value = Settings.Visuals.ESP.Distance, Callback = function(v) Settings.Visuals.ESP.Distance = v end })
+ESPSection:Toggle({ Name = "Weapon", Value = Settings.Visuals.ESP.Weapon, Callback = function(v) Settings.Visuals.ESP.Weapon = v end })
+ESPSection:Toggle({ Name = "Tracers", Value = Settings.Visuals.ESP.Tracers, Callback = function(v) Settings.Visuals.ESP.Tracers = v end })
+ESPSection:Toggle({ Name = "Team Check", Value = Settings.Visuals.ESP.TeamCheck, Callback = function(v) Settings.Visuals.ESP.TeamCheck = v end })
 
-local ESPToggle = ESPSection:AddToggle({ Name = "Enable ESP", Flag = "ESP_Enabled", Default = false, Callback = function(v) Settings.Visuals.ESP.Enabled = v end });
-local ESPElements = ESPToggle.Link:AddOption();
-ESPElements:AddToggle({ Name = "Boxes", Flag = "ESP_Boxes", Callback = function(v) Settings.Visuals.ESP.Boxes = v end })
-ESPElements:AddToggle({ Name = "Health Bar", Flag = "ESP_HP", Callback = function(v) Settings.Visuals.ESP.HealthBar = v end })
-ESPElements:AddToggle({ Name = "Names", Flag = "ESP_Names", Callback = function(v) Settings.Visuals.ESP.Names = v end })
-ESPElements:AddToggle({ Name = "Distance", Flag = "ESP_Dist", Callback = function(v) Settings.Visuals.ESP.Distance = v end })
-ESPElements:AddToggle({ Name = "Weapon", Flag = "ESP_Weap", Callback = function(v) Settings.Visuals.ESP.Weapon = v end })
-ESPElements:AddToggle({ Name = "Tracers", Flag = "ESP_Trac", Callback = function(v) Settings.Visuals.ESP.Tracers = v end })
+local OffscreenSection = VisualsTab:Section("Offscreen ESP")
+OffscreenSection:Toggle({ Name = "Enabled", Value = Settings.Visuals.ESP.Offscreen.Enabled, Callback = function(v) Settings.Visuals.ESP.Offscreen.Enabled = v end })
+OffscreenSection:Slider({ Name = "Radius", Min = 50, Max = 500, Value = Settings.Visuals.ESP.Offscreen.Radius, Callback = function(v) Settings.Visuals.ESP.Offscreen.Radius = v end })
+OffscreenSection:Slider({ Name = "Size", Min = 5, Max = 30, Value = Settings.Visuals.ESP.Offscreen.Size, Callback = function(v) Settings.Visuals.ESP.Offscreen.Size = v end })
+OffscreenSection:Colorpicker({ Name = "Color", Value = Settings.Visuals.ESP.Offscreen.Color, Callback = function(v) Settings.Visuals.ESP.Offscreen.Color = v end })
 
-ESPSection:AddToggle({ Name = "Team Check", Flag = "ESP_TeamCheck", Default = false, Callback = function(v) Settings.Visuals.ESP.TeamCheck = v end });
+local ESPColorSection = VisualsTab:Section("ESP Colors")
+ESPColorSection:Toggle({ Name = "Override Colors", Value = Settings.Visuals.ESP.OverrideColors, Callback = function(v) Settings.Visuals.ESP.OverrideColors = v end })
+ESPColorSection:Colorpicker({ Name = "Box Color", Value = Settings.Visuals.ESP.Colors.Box, Callback = function(v) Settings.Visuals.ESP.Colors.Box = v end })
+ESPColorSection:Colorpicker({ Name = "Name Color", Value = Settings.Visuals.ESP.Colors.Name, Callback = function(v) Settings.Visuals.ESP.Colors.Name = v end })
+ESPColorSection:Colorpicker({ Name = "Distance Color", Value = Settings.Visuals.ESP.Colors.Distance, Callback = function(v) Settings.Visuals.ESP.Colors.Distance = v end })
+ESPColorSection:Colorpicker({ Name = "Weapon Color", Value = Settings.Visuals.ESP.Colors.Weapon, Callback = function(v) Settings.Visuals.ESP.Colors.Weapon = v end })
+ESPColorSection:Colorpicker({ Name = "Tracer Color", Value = Settings.Visuals.ESP.Colors.Tracer, Callback = function(v) Settings.Visuals.ESP.Colors.Tracer = v end })
 
-local OffscreenToggle = ESPSection:AddToggle({ Name = "Offscreen ESP", Flag = "ESP_Offscreen", Default = false, Callback = function(v) Settings.Visuals.ESP.Offscreen.Enabled = v end });
-local OffscreenSettings = OffscreenToggle.Link:AddOption();
-OffscreenSettings:AddSlider({ Name = "Radius", Min = 50, Max = 500, Default = 150, Round = 0, Flag = "Offscreen_Radius", Callback = function(v) Settings.Visuals.ESP.Offscreen.Radius = v end });
-OffscreenSettings:AddSlider({ Name = "Size", Min = 5, Max = 30, Default = 15, Round = 0, Flag = "Offscreen_Size", Callback = function(v) Settings.Visuals.ESP.Offscreen.Size = v end });
-OffscreenSettings:AddColorPicker({ Name = "Color", Default = Color3.fromRGB(255, 0, 0), Flag = "Offscreen_Color", Callback = function(v) Settings.Visuals.ESP.Offscreen.Color = v end });
+local WorldSection = VisualsTab:Section("World")
+WorldSection:Toggle({ Name = "Time Changer", Value = Settings.Visuals.World.TimeChanger, Callback = function(v) Settings.Visuals.World.TimeChanger = v end })
+WorldSection:Slider({ Name = "Clock Time", Min = 0, Max = 24, Value = Settings.Visuals.World.TimeValue, Callback = function(v) Settings.Visuals.World.TimeValue = v end })
+WorldSection:Toggle({ Name = "Ambience", Value = Settings.Visuals.World.Ambience, Callback = function(v) Settings.Visuals.World.Ambience = v end })
+WorldSection:Colorpicker({ Name = "Ambience Color", Value = Settings.Visuals.World.AmbienceColor, Callback = function(v) Settings.Visuals.World.AmbienceColor = v end })
+WorldSection:Toggle({ Name = "Brightness", Value = Settings.Visuals.World.Brightness, Callback = function(v) Settings.Visuals.World.Brightness = v end })
+WorldSection:Slider({ Name = "Brightness Value", Min = 0, Max = 10, Step = 0.1, Value = Settings.Visuals.World.BrightnessValue, Callback = function(v) Settings.Visuals.World.BrightnessValue = v end })
+WorldSection:Toggle({ Name = "FOV Changer", Value = Settings.Visuals.World.FOV, Callback = function(v) Settings.Visuals.World.FOV = v end })
+WorldSection:Slider({ Name = "Field of View", Min = 30, Max = 120, Value = Settings.Visuals.World.FOVValue, Callback = function(v) Settings.Visuals.World.FOVValue = v end })
+WorldSection:Toggle({ Name = "Aspect Ratio", Value = Settings.Visuals.World.AspectRatio.Enabled, Callback = function(v) Settings.Visuals.World.AspectRatio.Enabled = v end })
+WorldSection:Slider({ Name = "Aspect Ratio Value", Min = 0, Max = 1, Step = 0.01, Value = Settings.Visuals.World.AspectRatio.Value, Callback = function(v) Settings.Visuals.World.AspectRatio.Value = v end })
 
-local ColorsToggle = ESPSection:AddToggle({ Name = "Custom Colors", Flag = "ESP_OverrideColors", Default = false, Callback = function(v) Settings.Visuals.ESP.OverrideColors = v end });
-local ColorSettings = ColorsToggle.Link:AddOption();
-ColorSettings:AddColorPicker({ Name = "Box Color", Default = Color3.fromRGB(255,255,255), Callback = function(v) Settings.Visuals.ESP.Colors.Box = v end })
-ColorSettings:AddColorPicker({ Name = "Name Color", Default = Color3.fromRGB(255,255,255), Callback = function(v) Settings.Visuals.ESP.Colors.Name = v end })
-ColorSettings:AddColorPicker({ Name = "Distance Color", Default = Color3.fromRGB(255,255,255), Callback = function(v) Settings.Visuals.ESP.Colors.Distance = v end })
-ColorSettings:AddColorPicker({ Name = "Weapon Color", Default = Color3.fromRGB(255,255,255), Callback = function(v) Settings.Visuals.ESP.Colors.Weapon = v end })
-ColorSettings:AddColorPicker({ Name = "Tracer Color", Default = Color3.fromRGB(255,255,255), Callback = function(v) Settings.Visuals.ESP.Colors.Tracer = v end })
 
-local WorldSection = VisualsTab:DrawSection({ Name = "World", Position = 'right' });
+local ThirdPersonSection = VisualsTab:Section("Third Person")
+local ThirdPersonToggle = ThirdPersonSection:Toggle({ Name = "Enabled", Value = Settings.Visuals.World.ThirdPerson.Enabled, Callback = function(v)
+    Settings.Visuals.World.ThirdPerson.Enabled = v
+    if not v then
+        LocalPlayer.CameraMinZoomDistance = 0.5
+        LocalPlayer.CameraMaxZoomDistance = 128
+    end
+end })
+ThirdPersonSection:Slider({ Name = "Distance", Min = 0, Max = 50, Value = Settings.Visuals.World.ThirdPerson.Distance, Callback = function(v) Settings.Visuals.World.ThirdPerson.Distance = v end })
+ThirdPersonSection:Keybind({ Name = "Toggle Key", Value = Settings.Visuals.World.ThirdPerson.Keybind, Callback = function(v) Settings.Visuals.World.ThirdPerson.Keybind = v end })
 
-local TimeToggle = WorldSection:AddToggle({ Name = "Time Changer", Flag = "World_TimeChanger", Default = false, Callback = function(v) Settings.Visuals.World.TimeChanger = v end });
-TimeToggle.Link:AddOption():AddSlider({ Name = "Clock Time", Min = 0, Max = 24, Default = 12, Round = 1, Flag = "World_TimeValue", Callback = function(v) Settings.Visuals.World.TimeValue = v end });
+local VMSection = VisualsTab:Section("Viewmodel")
+VMSection:Toggle({ Name = "Enable Viewmodel", Value = Settings.Visuals.Viewmodel.Enabled, Callback = function(v) Settings.Visuals.Viewmodel.Enabled = v end })
+VMSection:Slider({ Name = "X Offset", Min = -5, Max = 5, Step = 0.1, Value = Settings.Visuals.Viewmodel.X, Callback = function(v) Settings.Visuals.Viewmodel.X = v end })
+VMSection:Slider({ Name = "Y Offset", Min = -5, Max = 5, Step = 0.1, Value = Settings.Visuals.Viewmodel.Y, Callback = function(v) Settings.Visuals.Viewmodel.Y = v end })
+VMSection:Slider({ Name = "Z Offset", Min = -5, Max = 5, Step = 0.1, Value = Settings.Visuals.Viewmodel.Z, Callback = function(v) Settings.Visuals.Viewmodel.Z = v end })
+VMSection:Slider({ Name = "Pitch", Min = -180, Max = 180, Value = Settings.Visuals.Viewmodel.Pitch, Callback = function(v) Settings.Visuals.Viewmodel.Pitch = v end })
+VMSection:Slider({ Name = "Yaw", Min = -180, Max = 180, Value = Settings.Visuals.Viewmodel.Yaw, Callback = function(v) Settings.Visuals.Viewmodel.Yaw = v end })
+VMSection:Slider({ Name = "Roll", Min = -180, Max = 180, Value = Settings.Visuals.Viewmodel.Roll, Callback = function(v) Settings.Visuals.Viewmodel.Roll = v end })
 
-local AmbienceToggle = WorldSection:AddToggle({ Name = "Ambience", Flag = "World_Ambience", Default = false, Callback = function(v) Settings.Visuals.World.Ambience = v end });
-AmbienceToggle.Link:AddColorPicker({ Default = Color3.fromRGB(255, 255, 255), Flag = "World_AmbienceColor", Callback = function(v) Settings.Visuals.World.AmbienceColor = v end });
+local CrosshairSection = VisualsTab:Section("Crosshair")
+CrosshairSection:Toggle({ Name = "Enable Crosshair", Value = Settings.Visuals.Crosshair.Enabled, Callback = function(v) Settings.Visuals.Crosshair.Enabled = v end })
+CrosshairSection:Dropdown({ Name = "Mode", Items = {"Default", "Swastika", "Circle", "Square"}, Value = Settings.Visuals.Crosshair.Mode, Callback = function(v) Settings.Visuals.Crosshair.Mode = v end })
+CrosshairSection:Toggle({ Name = "Rainbow", Value = Settings.Visuals.Crosshair.Rainbow, Callback = function(v) Settings.Visuals.Crosshair.Rainbow = v end })
+CrosshairSection:Slider({ Name = "Size", Min = 1, Max = 50, Value = Settings.Visuals.Crosshair.Size, Callback = function(v) Settings.Visuals.Crosshair.Size = v end })
+CrosshairSection:Slider({ Name = "Gap", Min = 0, Max = 20, Value = Settings.Visuals.Crosshair.Gap, Callback = function(v) Settings.Visuals.Crosshair.Gap = v end })
+CrosshairSection:Slider({ Name = "Thickness", Min = 1, Max = 5, Value = Settings.Visuals.Crosshair.Thickness, Callback = function(v) Settings.Visuals.Crosshair.Thickness = v end })
+CrosshairSection:Colorpicker({ Name = "Color", Value = Settings.Visuals.Crosshair.Color, Callback = function(v) Settings.Visuals.Crosshair.Color = v end })
 
-local BrightnessToggle = WorldSection:AddToggle({ Name = "Brightness", Flag = "World_Brightness", Default = false, Callback = function(v) Settings.Visuals.World.Brightness = v end });
-BrightnessToggle.Link:AddOption():AddSlider({ Name = "Value", Min = 0, Max = 10, Default = 2, Round = 1, Flag = "World_BrightnessValue", Callback = function(v) Settings.Visuals.World.BrightnessValue = v end });
 
-local FOVToggle = WorldSection:AddToggle({ Name = "FOV Changer", Flag = "World_FOV", Default = false, Callback = function(v) Settings.Visuals.World.FOV = v end });
-FOVToggle.Link:AddOption():AddSlider({ Name = "Field of View", Min = 30, Max = 120, Default = 70, Round = 0, Flag = "World_FOVValue", Callback = function(v) Settings.Visuals.World.FOVValue = v end });
+-- [[ MISC TAB ]]
+local ExtraSection = MiscTab:Section("Extra")
+ExtraSection:Toggle({ Name = "Unlock All Skins", Value = Settings.Misc.SkinUnlocker, Callback = function(state)
+    Settings.Misc.SkinUnlocker = state
+    if state then applyUnlock() else restoreUnlock() end
+end })
 
-local ThirdPersonToggle = WorldSection:AddToggle({ 
-    Name = "Third Person", 
-    Flag = "World_ThirdPerson", 
-    Default = false, 
-    Callback = function(v) 
+local WeaponModsSection = MiscTab:Section("Weapon Mods")
+WeaponModsSection:Toggle({ Name = "Enable Weapon Mods", Value = Settings.Weapons.Enabled, Callback = function(v)
+    Settings.Weapons.Enabled = v
+    if v then ApplyWeaponMods() else RestoreWeaponMods() end
+end })
+WeaponModsSection:Slider({ Name = "Ammo", Min = 0, Max = 100, Value = Settings.Weapons.Ammo, Callback = function(v) Settings.Weapons.Ammo = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end })
+WeaponModsSection:Toggle({ Name = "Auto", Value = Settings.Weapons.Auto, Callback = function(v) Settings.Weapons.Auto = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end })
+WeaponModsSection:Slider({ Name = "Damage", Min = 0, Max = 100, Value = Settings.Weapons.DMG, Callback = function(v) Settings.Weapons.DMG = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end })
+WeaponModsSection:Slider({ Name = "Equip Time", Min = 0, Max = 100, Step = 0.1, Value = Settings.Weapons.EquipTime, Callback = function(v) Settings.Weapons.EquipTime = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end })
+WeaponModsSection:Slider({ Name = "Fire Rate", Min = 0, Max = 10, Step = 0.1, Value = Settings.Weapons.FireRate, Callback = function(v) Settings.Weapons.FireRate = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end })
+WeaponModsSection:Slider({ Name = "Kill Award", Min = 0, Max = 100, Value = Settings.Weapons.KillAward, Callback = function(v) Settings.Weapons.KillAward = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end })
+WeaponModsSection:Slider({ Name = "Stored Ammo", Min = 0, Max = 100, Value = Settings.Weapons.StoredAmmo, Callback = function(v) Settings.Weapons.StoredAmmo = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end })
+
+-- [[ SETTINGS TAB ]]
+local MenuSettings = SettingsTab:Section("Menu Settings")
+MenuSettings:Keybind({ Name = "Menu Key", Value = MenuKey, Callback = function(v) MenuKey = v end })
+
+local function ToggleThirdPerson()
+    if ThirdPersonToggle.SetValue then
+         ThirdPersonToggle:SetValue(not Settings.Visuals.World.ThirdPerson.Enabled)
+    else
+        -- Fallback if library API is different
+        local v = not Settings.Visuals.World.ThirdPerson.Enabled
         Settings.Visuals.World.ThirdPerson.Enabled = v
         if not v then
             LocalPlayer.CameraMinZoomDistance = 0.5
             LocalPlayer.CameraMaxZoomDistance = 128
         end
-    end 
-});
-local ThirdPersonSettings = ThirdPersonToggle.Link:AddOption();
-ThirdPersonSettings:AddSlider({ Name = "Distance", Min = 0, Max = 50, Default = 10, Round = 1, Flag = "World_TPDist", Callback = function(v) Settings.Visuals.World.ThirdPerson.Distance = v end });
-
-local AspectToggle = WorldSection:AddToggle({ Name = "Aspect Ratio", Flag = "World_AspectRatio", Default = false, Callback = function(v) Settings.Visuals.World.AspectRatio.Enabled = v end });
-AspectToggle.Link:AddOption():AddSlider({ Name = "Value", Min = 0, Max = 1, Default = 1, Round = 2, Flag = "World_AspectValue", Callback = function(v) Settings.Visuals.World.AspectRatio.Value = v end });
-
-local VMSection = VisualsTab:DrawSection({ Name = "Viewmodel", Position = 'right' });
-
-local VMToggle = VMSection:AddToggle({ Name = "Enable Viewmodel", Flag = "VM_Enabled", Default = false, Callback = function(v) Settings.Visuals.Viewmodel.Enabled = v end });
-local VMSettings = VMToggle.Link:AddOption();
-
-VMSettings:AddSlider({ Name = "X Offset", Min = -5, Max = 5, Default = 0, Round = 1, Flag = "VM_X", Callback = function(v) Settings.Visuals.Viewmodel.X = v end });
-VMSettings:AddSlider({ Name = "Y Offset", Min = -5, Max = 5, Default = 0, Round = 1, Flag = "VM_Y", Callback = function(v) Settings.Visuals.Viewmodel.Y = v end });
-VMSettings:AddSlider({ Name = "Z Offset", Min = -5, Max = 5, Default = 0, Round = 1, Flag = "VM_Z", Callback = function(v) Settings.Visuals.Viewmodel.Z = v end });
-
-VMSettings:AddSlider({ Name = "Pitch", Min = -180, Max = 180, Default = 0, Round = 0, Flag = "VM_Pitch", Callback = function(v) Settings.Visuals.Viewmodel.Pitch = v end });
-VMSettings:AddSlider({ Name = "Yaw", Min = -180, Max = 180, Default = 0, Round = 0, Flag = "VM_Yaw", Callback = function(v) Settings.Visuals.Viewmodel.Yaw = v end });
-VMSettings:AddSlider({ Name = "Roll", Min = -180, Max = 180, Default = 0, Round = 0, Flag = "VM_Roll", Callback = function(v) Settings.Visuals.Viewmodel.Roll = v end });
-
-local CrosshairSection = VisualsTab:DrawSection({ Name = "Crosshair", Position = 'right' });
-
-local CrosshairToggle = CrosshairSection:AddToggle({ Name = "Enable Crosshair", Flag = "Crosshair_Enabled", Default = false, Callback = function(v) Settings.Visuals.Crosshair.Enabled = v end });
-local CrosshairSettings = CrosshairToggle.Link:AddOption();
-
-CrosshairSettings:AddDropdown({ Name = "Mode", Values = {"Default", "Swastika", "Circle", "Square"}, Default = "Default", Flag = "Crosshair_Mode", Callback = function(v) Settings.Visuals.Crosshair.Mode = v end });
-CrosshairSettings:AddToggle({ Name = "Rainbow", Flag = "Crosshair_Rainbow", Default = false, Callback = function(v) Settings.Visuals.Crosshair.Rainbow = v end });
-CrosshairSettings:AddSlider({ Name = "Size", Min = 1, Max = 50, Default = 12, Round = 0, Flag = "Crosshair_Size", Callback = function(v) Settings.Visuals.Crosshair.Size = v end });
-CrosshairSettings:AddSlider({ Name = "Gap", Min = 0, Max = 20, Default = 2, Round = 0, Flag = "Crosshair_Gap", Callback = function(v) Settings.Visuals.Crosshair.Gap = v end });
-CrosshairSettings:AddSlider({ Name = "Thickness", Min = 1, Max = 5, Default = 1, Round = 0, Flag = "Crosshair_Thick", Callback = function(v) Settings.Visuals.Crosshair.Thickness = v end });
-CrosshairToggle.Link:AddColorPicker({ Default = Color3.fromRGB(0, 255, 140), Flag = "Crosshair_Color", Callback = function(v) Settings.Visuals.Crosshair.Color = v end });
-
-local ExtraSection = MiscTab:DrawSection({ Name = "Extra" });
-
-ExtraSection:AddToggle({
-    Name = "Unlock all skins",
-    Flag = "skinunlocker",
-    Default = false,
-    Callback = function(state)
-        Settings.Misc.SkinUnlocker = state
-        if state then applyUnlock() else restoreUnlock() end
-    end,
-});
-
-local WeaponsSection = MiscTab:DrawSection({ Name = "Weapon Mods", Position = 'right' });
-
-WeaponsSection:AddToggle({
-    Name = "Enable Weapon Mods",
-    Flag = "Wep_Enabled",
-    Default = false,
-    Callback = function(v)
-        Settings.Weapons.Enabled = v
-        if v then
-            ApplyWeaponMods()
-        else
-            RestoreWeaponMods()
-        end
-    end
-})
-
-WeaponsSection:AddSlider({ Name = "Ammo", Min = 0, Max = 100, Default = 100, Round = 0, Flag = "Wep_Ammo", Callback = function(v) Settings.Weapons.Ammo = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end });
-WeaponsSection:AddToggle({ Name = "Auto", Flag = "Wep_Auto", Default = true, Callback = function(v) Settings.Weapons.Auto = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end });
-WeaponsSection:AddSlider({ Name = "Damage", Min = 0, Max = 100, Default = 100, Round = 0, Flag = "Wep_DMG", Callback = function(v) Settings.Weapons.DMG = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end });
-WeaponsSection:AddSlider({ Name = "Equip Time", Min = 0, Max = 100, Default = 0, Round = 2, Flag = "Wep_Equip", Callback = function(v) Settings.Weapons.EquipTime = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end });
-WeaponsSection:AddSlider({ Name = "Fire Rate", Min = 0, Max = 10, Default = 0, Round = 2, Flag = "Wep_FireRate", Callback = function(v) Settings.Weapons.FireRate = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end });
-WeaponsSection:AddSlider({ Name = "Kill Award", Min = 0, Max = 100, Default = 100, Round = 0, Flag = "Wep_KillAward", Callback = function(v) Settings.Weapons.KillAward = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end });
-WeaponsSection:AddSlider({ Name = "Stored Ammo", Min = 0, Max = 100, Default = 100, Round = 0, Flag = "Wep_Stored", Callback = function(v) Settings.Weapons.StoredAmmo = v; if Settings.Weapons.Enabled then ApplyWeaponMods() end end });
-
-local SettingsTab = Window:DrawTab({ Icon = "settings-3", Name = "Settings", Type = "Single" });
-
-local SettingsSection = SettingsTab:DrawSection({ Name = "Menu Settings" });
-SettingsSection:AddKeybind({
-    Name = "Menu Key",
-    Default = MenuKey,
-    Callback = function(f)
-        MenuKey = f;
-        Window:SetMenuKey(MenuKey)
-    end,
-});
-SettingsSection:AddColorPicker({
-    Name = "Menu Color",
-    Default = Compkiller.Colors.Highlight,
-    Callback = function(f)
-        Compkiller.Colors.Highlight = f;
-        Compkiller:RefreshCurrentColor();
-    end,
-});
-
-local ConfigUI = Window:DrawConfig({ Name = "Config", Icon = "folder", Config = ConfigManager });
-ConfigUI:Init();
-
-local function ToggleThirdPerson()
-    local newState = not Settings.Visuals.World.ThirdPerson.Enabled
-    Settings.Visuals.World.ThirdPerson.Enabled = newState
-    ThirdPersonToggle:Set(newState)
-    
-    if not newState then
-        LocalPlayer.CameraMinZoomDistance = 0.5
-        LocalPlayer.CameraMaxZoomDistance = 128
     end
 end
 
@@ -975,3 +914,4 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         ToggleThirdPerson()
     end
 end)
+
