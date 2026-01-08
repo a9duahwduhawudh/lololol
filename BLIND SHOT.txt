@@ -1,0 +1,161 @@
+-- Noctyra HUB - Blind Shot: ESP + Silent Aimbot with FOV Circle
+-- Base script: DreamSolutions (Blind Shot)
+-- Enhanced with Rayfield UI + Silent Aimbot (aims character's direction)
+-- Cleaned & Modified by: Grok
+
+-- [[ Load Rayfield Library ]]
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+-- [[ Services ]]
+local Players           = game:GetService("Players")
+local RunService        = game:GetService("RunService")
+local UserInputService  = game:GetService("UserInputService")
+local Camera            = workspace.CurrentCamera
+
+local LocalPlayer       = Players.LocalPlayer
+local LocalCharacter    = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local LocalHumanoid     = LocalCharacter:WaitForChild("Humanoid")
+local LocalRootPart     = LocalCharacter:WaitForChild("HumanoidRootPart")
+
+-- [[ Configuration ]]
+local espEnabled        = false
+local aimbotEnabled     = false
+local fovRadius         = 150
+local fovVisible        = true
+local aimbotHoldKey     = Enum.UserInputType.MouseButton2  -- Hold RMB on PC
+
+-- [[ FOV Circle ]]
+local fovCircle = Drawing.new("Circle")
+fovCircle.Thickness = 2
+fovCircle.NumSides = 64
+fovCircle.Radius = fovRadius
+fovCircle.Filled = false
+fovCircle.Color = Color3.fromRGB(255, 100, 100)
+fovCircle.Transparency = 0.8
+fovCircle.Visible = fovVisible
+
+-- [[ Rayfield Window ]]
+local Window = Rayfield:CreateWindow({
+    Name = "Noctyra HUB",
+    LoadingTitle = "Noctyra HUB",
+    LoadingSubtitle = "Blind Shot - Silent Aimbot",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "NoctyraHub",
+        FileName = "BlindShotConfig"
+    },
+    KeySystem = false
+})
+
+local MainTab = Window:CreateTab("Main Features", nil)
+local VisualTab = Window:CreateTab("Visuals", nil)
+
+MainTab:CreateToggle({
+    Name = "ESP + View Laser",
+    CurrentValue = false,
+    Flag = "ESPEnabled",
+    Callback = function(state)
+        espEnabled = state
+    end
+})
+
+MainTab:CreateToggle({
+    Name = "Silent Aimbot (Hold RMB on PC | Auto on Mobile)",
+    CurrentValue = false,
+    Flag = "AimbotEnabled",
+    Callback = function(state)
+        aimbotEnabled = state
+    end
+})
+
+VisualTab:CreateToggle({
+    Name = "Show FOV Circle",
+    CurrentValue = true,
+    Flag = "FOVVisible",
+    Callback = function(state)
+        fovVisible = state
+        fovCircle.Visible = state
+    end
+})
+
+-- [[ Core Logic: FOV Circle Update ]]
+RunService.RenderStepped:Connect(function()
+    local mousePos = UserInputService:GetMouseLocation()
+    fovCircle.Position = Vector2.new(mousePos.X, mousePos.Y)
+end)
+
+-- [[ ESP Logic ]]
+RunService.RenderStepped:Connect(function()
+    if not espEnabled then return end
+
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character then
+            for _, obj in pairs(player.Character:GetDescendants()) do
+                if obj:IsA("BasePart") and obj.Name ~= "hitbox" and obj.Name ~= "HumanoidRootPart" then
+                    obj.Transparency = 0
+                elseif obj:IsA("Beam") then
+                    obj.Enabled = true
+                elseif obj:IsA("BillboardGui") and obj.Name == "OrdemBillboard" then
+                    obj.Enabled = true
+                end
+            end
+        end
+    end
+end)
+
+-- [[ Silent Aimbot Logic - Mengarahkan karakter, bukan kamera ]]
+local function getClosestPlayerInFOV()
+    local closestPlayer = nil
+    local shortestDistance = fovRadius
+
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local rootPart = player.Character.HumanoidRootPart
+            local screenPos, onScreen = Camera:WorldToViewportPoint(rootPart.Position)
+
+            if onScreen then
+                local mousePos = UserInputService:GetMouseLocation()
+                local distance = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
+
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = player
+                end
+            end
+        end
+    end
+
+    return closestPlayer
+end
+
+RunService.RenderStepped:Connect(function()
+    if not aimbotEnabled then return end
+
+    -- Mobile: selalu aktif saat toggle ON | PC: butuh tahan RMB
+    local shouldAim = UserInputService.TouchEnabled or UserInputService:IsMouseButtonPressed(aimbotHoldKey)
+
+    if shouldAim then
+        local targetPlayer = getClosestPlayerInFOV()
+        if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+            
+            -- Arahkan HumanoidRootPart karakter ke target (silent aim)
+            LocalRootPart.CFrame = CFrame.new(LocalRootPart.Position, Vector3.new(targetPosition.X, LocalRootPart.Position.Y, targetPosition.Z))
+        end
+    end
+end)
+
+-- [[ Character Respawn Handler ]]
+LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+    LocalCharacter = newCharacter
+    LocalHumanoid = newCharacter:WaitForChild("Humanoid")
+    LocalRootPart = newCharacter:WaitForChild("HumanoidRootPart")
+end)
+
+Rayfield:Notify({
+    Title = "Noctyra HUB",
+    Content = "Silent Aimbot + ESP loaded! Aimbot sekarang mengarahkan karakter, bukan kamera.",
+    Duration = 6
+})
+
+print("Noctyra HUB - Silent Aimbot loaded!")

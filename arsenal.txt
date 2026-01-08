@@ -1,0 +1,1285 @@
+-- ts file was generated at discord.gg/25ms
+
+
+local vu1 = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local v2 = vu1:CreateWindow({
+    Name = 'Noctyra HUB Arsenal',
+    Icon = 0,
+    LoadingTitle = 'Loading Noctyra HUB',
+    LoadingSubtitle = 'By Noctyra',
+    ShowText = 'Noctyra',
+    Theme = 'Ocean',
+    ToggleUIKeybind = 'K',
+    DisableRayfieldPrompts = false,
+    DisableBuildWarnings = false,
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = nil,
+        FileName = 'Noctyra Hub',
+    },
+    Discord = {
+        Enabled = false,
+        Invite = 'noinvitelink',
+        RememberJoins = true,
+    },
+    KeySystem = false,
+    KeySettings = {
+        Title = 'Radium.cc Key',
+        Subtitle = 'Key System',
+        Note = 'Join Discord',
+        FileName = 'Key',
+        SaveKey = false,
+        GrabKeyFromSite = false,
+        Key = {
+            'A66E26C1FC82FF71C9B8627F25C9E',
+        },
+    },
+})
+local v3 = v2:CreateTab('Main', nil)
+
+v3:CreateSection('Silent aim')
+
+local vu4 = game:GetService('Players')
+local vu5 = vu4.LocalPlayer
+local vu6 = false
+
+v3:CreateToggle({
+    Name = 'Silent Aim',
+    CurrentValue = false,
+    Flag = 'Toggle1',
+    Callback = function(p7)
+        vu6 = p7
+    end,
+})
+
+local function vu11(p8, p9)
+    if p8 then
+        local v10 = p8:FindFirstChild('HeadHB')
+
+        if v10 then
+            v10.Size = p9
+            v10.CanCollide = false
+            v10.Massless = true
+            v10.Transparency = 1
+        end
+    end
+end
+
+task.spawn(function()
+    while true do
+        repeat
+            task.wait(0.1)
+        until vu6
+
+        local v12, v13, v14 = ipairs(workspace:GetChildren())
+
+        while true do
+            local v15
+
+            v14, v15 = v12(v13, v14)
+
+            if v14 == nil then
+                break
+            end
+            if v15:IsA('Model') and v15:FindFirstChildOfClass('Humanoid') and vu4:GetPlayerFromCharacter(v15) ~= vu5 then
+                vu11(v15, Vector3.new(25, 25, 25))
+            end
+        end
+    end
+end)
+
+local v16 = v2:CreateTab('Esp', nil)
+
+v16:CreateSection('Players')
+
+local v17 = game:GetService('Players')
+local v18 = game:GetService('RunService')
+local vu19 = workspace.CurrentCamera
+local vu20 = v17.LocalPlayer
+local vu21 = true
+local vu22 = false
+local vu23 = '2d'
+local vu24 = false
+local vu25 = false
+local vu26 = false
+local vu27 = false
+local vu28 = 1.8
+local vu29 = 2.5
+local vu30 = 3
+local vu31 = 3000
+local vu32 = Color3.fromRGB(255, 255, 255)
+local vu33 = Color3.fromRGB(0, 0, 0)
+local vu34 = Color3.fromRGB(255, 255, 255)
+local vu35 = Color3.fromRGB(255, 255, 255)
+local vu36 = Color3.fromRGB(0, 0, 0)
+local vu37 = 1.5
+local vu38 = {}
+local vu39 = {
+    {
+        'Head',
+        'UpperTorso',
+    },
+    {
+        'UpperTorso',
+        'LowerTorso',
+    },
+    {
+        'UpperTorso',
+        'LeftUpperArm',
+    },
+    {
+        'LeftUpperArm',
+        'LeftLowerArm',
+    },
+    {
+        'LeftLowerArm',
+        'LeftHand',
+    },
+    {
+        'UpperTorso',
+        'RightUpperArm',
+    },
+    {
+        'RightUpperArm',
+        'RightLowerArm',
+    },
+    {
+        'RightLowerArm',
+        'RightHand',
+    },
+    {
+        'LowerTorso',
+        'LeftUpperLeg',
+    },
+    {
+        'LeftUpperLeg',
+        'LeftLowerLeg',
+    },
+    {
+        'LeftLowerLeg',
+        'LeftFoot',
+    },
+    {
+        'LowerTorso',
+        'RightUpperLeg',
+    },
+    {
+        'RightUpperLeg',
+        'RightLowerLeg',
+    },
+    {
+        'RightLowerLeg',
+        'RightFoot',
+    },
+}
+
+local function vu43(p40, p41)
+    local v42 = Drawing.new('Line')
+
+    v42.Color = p40 or Color3.new(1, 1, 1)
+    v42.Thickness = p41 or 1
+    v42.Visible = false
+
+    return v42
+end
+local function vu45()
+    local v44 = Drawing.new('Square')
+
+    v44.Visible = false
+    v44.Filled = false
+
+    return v44
+end
+local function vu48(p46)
+    local v47 = Drawing.new('Text')
+
+    v47.Visible = false
+    v47.Center = true
+    v47.Outline = true
+    v47.OutlineColor = vu33
+    v47.Size = p46 or 16
+    v47.Font = 3
+    v47.Color = vu34
+
+    return v47
+end
+local function vu67(p49)
+    local v50, v51, v52 = ipairs(p49:GetDescendants())
+    local v53 = {}
+
+    while true do
+        local v54
+
+        v52, v54 = v50(v51, v52)
+
+        if v52 == nil then
+            break
+        end
+        if v54:IsA('BasePart') and (v54.Transparency < 1 and v54.CanCollide) then
+            table.insert(v53, v54)
+        end
+    end
+
+    if # v53 ~= 0 then
+        local v55 = v53[1].Position.X - v53[1].Size.X / 2
+        local v56 = v53[1].Position.Y - v53[1].Size.Y / 2
+        local v57 = v53[1].Position.Z - v53[1].Size.Z / 2
+        local v58 = v53[1].Position.X + v53[1].Size.X / 2
+        local v59 = v53[1].Position.Y + v53[1].Size.Y / 2
+        local v60 = v53[1].Position.Z + v53[1].Size.Z / 2
+
+        for v61 = 2, # v53 do
+            local v62 = v53[v61].Position
+            local v63 = v53[v61].Size
+
+            v55 = math.min(v55, v62.X - v63.X / 2)
+            v58 = math.max(v58, v62.X + v63.X / 2)
+            v56 = math.min(v56, v62.Y - v63.Y / 2)
+            v59 = math.max(v59, v62.Y + v63.Y / 2)
+            v57 = math.min(v57, v62.Z - v63.Z / 2)
+            v60 = math.max(v60, v62.Z + v63.Z / 2)
+        end
+
+        local v64 = Vector3.new((v55 + v58) / 2, (v56 + v59) / 2, (v57 + v60) / 2)
+        local v65 = Vector3.new(v58 - v55, v59 - v56, v60 - v57)
+
+        return CFrame.new(v64), v65
+    else
+        local v66 = p49:FindFirstChild('HumanoidRootPart') or p49:FindFirstChildWhichIsA('BasePart')
+
+        if v66 then
+            return v66.CFrame, v66.Size
+        else
+            return nil, nil
+        end
+    end
+end
+
+local vu68 = {
+    {
+        1,
+        2
+    },
+    {
+        1,
+        3
+    },
+    {
+        1,
+        5
+    },
+    {
+        2,
+        4
+    },
+    {
+        2,
+        6
+    },
+    {
+        3,
+        4
+    },
+    {
+        3,
+        7
+    },
+    {
+        4,
+        8
+    },
+    {
+        5,
+        6
+    },
+    {
+        5,
+        7
+    },
+    {
+        6,
+        8
+    },
+    {
+        7,
+        8
+    },
+}
+
+local function vu72(p69)
+    if not (vu19 and vu19.Parent) then
+        vu19 = workspace.CurrentCamera
+    end
+
+    local v70, v71 = vu19:WorldToViewportPoint(p69)
+
+    return Vector2.new(v70.X, v70.Y), v71
+end
+local function vu76(p73)
+    if not (p73 and p73.Position) then
+        return Vector2.new(0, 0), false
+    end
+
+    local v74, v75 = vu72(p73.Position)
+
+    return v74, v75
+end
+local function vu83(p77)
+    if p77 and p77 ~= vu20 then
+        if not vu38[p77] then
+            local v78 = {
+                boxOutline = vu45(),
+            }
+
+            v78.boxOutline.Color = vu33
+            v78.boxOutline.Thickness = 1.2
+            v78.box = vu45()
+            v78.box.Color = vu32
+            v78.box.Thickness = 1
+            v78.box3d = {}
+
+            for v79 = 1, 12 do
+                v78.box3d[v79] = vu43(vu32, vu37)
+            end
+
+            v78.nameText = vu48(18)
+            v78.distText = vu48(14)
+            v78.skeleton = {}
+
+            for v80 = 1, # vu39 do
+                local v81 = vu43(vu36, 3)
+                local v82 = vu43(vu35, 1.5)
+
+                v78.skeleton[v80] = {
+                    outline = v81,
+                    main = v82,
+                    from = vu39[v80][1],
+                    to = vu39[v80][2],
+                }
+            end
+
+            vu38[p77] = v78
+        end
+    else
+        return
+    end
+end
+local function vu93(p84)
+    local v85 = vu38[p84]
+
+    if v85 then
+        local function v87(pu86)
+            if pu86 then
+                pcall(function()
+                    pu86:Remove()
+                end)
+            end
+        end
+
+        v87(v85.box)
+        v87(v85.boxOutline)
+        v87(v85.nameText)
+        v87(v85.distText)
+
+        for v88 = 1, 12 do
+            v87(v85.box3d[v88])
+        end
+
+        local v89, v90, v91 = ipairs(v85.skeleton)
+
+        while true do
+            local v92
+
+            v91, v92 = v89(v90, v91)
+
+            if v91 == nil then
+                break
+            end
+
+            v87(v92.outline)
+            v87(v92.main)
+        end
+
+        vu38[p84] = nil
+    end
+end
+
+local v94, v95, v96 = ipairs(v17:GetPlayers())
+local vu97 = vu36
+local vu98 = vu72
+local vu99 = vu34
+local vu100 = vu20
+local vu101 = vu38
+local vu102 = vu32
+local vu103 = vu37
+local vu104 = vu35
+local vu105 = vu19
+
+local function vu111(p106, p107)
+    local v108 = p107.X / 2
+    local v109 = p107.Y / 2
+    local v110 = p107.Z / 2
+
+    return {
+        (p106 * CFrame.new(- v108, - v109, - v110)).Position,
+        (p106 * CFrame.new(- v108, - v109, v110)).Position,
+        (p106 * CFrame.new(- v108, v109, - v110)).Position,
+        (p106 * CFrame.new(- v108, v109, v110)).Position,
+        (p106 * CFrame.new(v108, - v109, - v110)).Position,
+        (p106 * CFrame.new(v108, - v109, v110)).Position,
+        (p106 * CFrame.new(v108, v109, - v110)).Position,
+        (p106 * CFrame.new(v108, v109, v110)).Position,
+    }
+end
+
+while true do
+    local v112
+
+    v96, v112 = v94(v95, v96)
+
+    if v96 == nil then
+        break
+    end
+
+    vu83(v112)
+end
+
+v17.PlayerAdded:Connect(function(pu113)
+    vu83(pu113)
+    pu113.CharacterAdded:Connect(function()
+        task.wait(0.1)
+        vu83(pu113)
+    end)
+end)
+v17.PlayerRemoving:Connect(vu93)
+v18.RenderStepped:Connect(function()
+    if not (vu105 and vu105.Parent) then
+        vu105 = workspace.CurrentCamera
+    end
+
+    local v114, v115, v116 = pairs(vu101)
+
+    while true do
+        local v117
+
+        v116, v117 = v114(v115, v116)
+
+        if v116 == nil then
+            break
+        end
+        if v116 ~= vu100 then
+            local v118 = v116.Character
+            local v119
+
+            if v118 then
+                v119 = v118:FindFirstChildOfClass('Humanoid')
+            else
+                v119 = v118
+            end
+
+            local v120 = vu27 and vu100.Team
+
+            if v120 then
+                v120 = v116.Team == vu100.Team
+            end
+            if vu21 and (v118 and (v119 and (v119.Health > 0 and not v120))) then
+                local v121 = v118:FindFirstChild('HumanoidRootPart') or v118:FindFirstChildWhichIsA('BasePart')
+                local v122 = v118:FindFirstChild('Head') or v121
+                local v123, v124 = vu76(v121)
+                local v125, v126 = vu76(v122)
+                local v127 = (vu105.CFrame.Position - (v121 and v121.Position or Vector3.new())).Magnitude
+
+                if vu31 >= v127 then
+                    local v128
+
+                    if vu22 then
+                        if vu23 ~= '2d' then
+                            if vu23 ~= '3d' then
+                                v128 = v116
+                            else
+                                local v129, v130 = vu67(v118)
+
+                                if v129 and v130 then
+                                    local v131 = vu111(v129, (Vector3.new(v130.X * vu28, v130.Y * vu29, v130.Z * vu30)))
+                                    local v132, v133, v134 = ipairs(vu68)
+
+                                    v128 = v116
+
+                                    while true do
+                                        local v135
+
+                                        v134, v135 = v132(v133, v134)
+
+                                        if v134 == nil then
+                                            break
+                                        end
+
+                                        local v136, v137 = vu98(v131[v135[1] ])
+                                        local v138, v139 = vu98(v131[v135[2] ])
+                                        local v140 = v117.box3d[v134]
+
+                                        v140.From = v136
+                                        v140.To = v138
+                                        v140.Visible = v137 or v139
+                                        v140.Color = vu102
+                                        v140.Thickness = vu103
+                                    end
+                                else
+                                    v128 = v116
+
+                                    for v141 = 1, 12 do
+                                        v117.box3d[v141].Visible = false
+                                    end
+                                end
+
+                                v117.box.Visible = false
+                            end
+                        else
+                            local v142 = math.abs(v125.Y - v123.Y) * 4
+                            local v143 = v142 <= 0 and 120 or v142
+                            local v144 = v143 / 1.4
+
+                            v117.box.Position = Vector2.new(v123.X - v144 / 2, v123.Y - v143 / 2)
+                            v117.box.Size = Vector2.new(v144, v143)
+                            v117.box.Color = vu102
+                            v117.box.Visible = v124 or v126
+                            v128 = v116
+
+                            for v145 = 1, 12 do
+                                v117.box3d[v145].Visible = false
+                            end
+                        end
+                    else
+                        v117.box.Visible = false
+                        v128 = v116
+
+                        for v146 = 1, 12 do
+                            v117.box3d[v146].Visible = false
+                        end
+                    end
+                    if vu26 then
+                        local v147, v148, v149 = ipairs(v117.skeleton)
+
+                        while true do
+                            local v150
+
+                            v149, v150 = v147(v148, v149)
+
+                            if v149 == nil then
+                                break
+                            end
+
+                            local v151 = v118:FindFirstChild(v150.from)
+                            local v152 = v118:FindFirstChild(v150.to)
+
+                            if v151 and v152 then
+                                local v153, v154 = vu98(v151.Position)
+                                local v155, v156 = vu98(v152.Position)
+
+                                if v154 or v156 then
+                                    v150.outline.From = v153
+                                    v150.outline.To = v155
+                                    v150.outline.Visible = true
+                                    v150.main.From = v153
+                                    v150.main.To = v155
+                                    v150.main.Visible = true
+                                    v150.outline.Color = vu97
+                                    v150.main.Color = vu104
+                                else
+                                    v150.outline.Visible = false
+                                    v150.main.Visible = false
+                                end
+                            else
+                                v150.outline.Visible = false
+                                v150.main.Visible = false
+                            end
+                        end
+                    else
+                        local v157, v158, v159 = ipairs(v117.skeleton)
+
+                        while true do
+                            local v160
+
+                            v159, v160 = v157(v158, v159)
+
+                            if v159 == nil then
+                                break
+                            end
+
+                            v160.outline.Visible = false
+                            v160.main.Visible = false
+                        end
+                    end
+                    if vu24 then
+                        v117.nameText.Text = v116.DisplayName or v116.Name
+                        v117.nameText.Position = Vector2.new(v123.X, v123.Y - 40)
+                        v117.nameText.Color = vu99
+                        v117.nameText.Visible = v124 or v126
+                    else
+                        v117.nameText.Visible = false
+                    end
+                    if vu25 then
+                        v117.distText.Text = string.format('%dm', math.floor(v127))
+                        v117.distText.Position = Vector2.new(v123.X, v123.Y + 20)
+                        v117.distText.Color = vu99
+                        v117.distText.Visible = v124 or v126
+                        v116 = v128
+                    else
+                        v117.distText.Visible = false
+                        v116 = v128
+                    end
+                else
+                    local v161, v162, v163 = pairs(v117)
+
+                    while true do
+                        local v164
+
+                        v163, v164 = v161(v162, v163)
+
+                        if v163 == nil then
+                            break
+                        end
+                        if typeof(v164) ~= 'table' then
+                            if v164 and v164.Visible ~= nil then
+                                v164.Visible = false
+                            end
+                        else
+                            local v165, v166, v167 = pairs(v164)
+
+                            while true do
+                                local v168
+
+                                v167, v168 = v165(v166, v167)
+
+                                if v167 == nil then
+                                    break
+                                end
+                                if v168 and v168.Visible ~= nil then
+                                    v168.Visible = false
+                                end
+                            end
+                        end
+                    end
+                end
+            else
+                local v169, v170, v171 = pairs(v117)
+
+                while true do
+                    local v172
+
+                    v171, v172 = v169(v170, v171)
+
+                    if v171 == nil then
+                        break
+                    end
+                    if typeof(v172) ~= 'table' then
+                        if v172 and v172.Visible ~= nil then
+                            v172.Visible = false
+                        end
+                    else
+                        local v173, v174, v175 = pairs(v172)
+
+                        while true do
+                            local v176
+
+                            v175, v176 = v173(v174, v175)
+
+                            if v175 == nil then
+                                break
+                            end
+                            if v176 and v176.Visible ~= nil then
+                                v176.Visible = false
+                            end
+                        end
+                    end
+                end
+            end
+        else
+            vu93(v116)
+        end
+    end
+end)
+v16:CreateToggle({
+    Name = 'Enable ESP',
+    CurrentValue = vu21,
+    Callback = function(p177)
+        vu21 = p177
+    end,
+})
+v16:CreateToggle({
+    Name = 'Box ESP',
+    CurrentValue = vu22,
+    Callback = function(p178)
+        vu22 = p178
+    end,
+})
+v16:CreateDropdown({
+    Name = 'Box Type',
+    Options = {
+        '2d',
+        '3d',
+    },
+    CurrentOption = {
+        '2d',
+    },
+    MultipleOptions = false,
+    Flag = 'Dropdown1',
+    Callback = function(p179)
+        vu23 = p179[1]
+    end,
+})
+v16:CreateToggle({
+    Name = 'Skeleton ESP',
+    CurrentValue = vu26,
+    Callback = function(p180)
+        vu26 = p180
+    end,
+})
+v16:CreateToggle({
+    Name = 'Name ESP',
+    CurrentValue = vu24,
+    Callback = function(p181)
+        vu24 = p181
+    end,
+})
+v16:CreateToggle({
+    Name = 'Distance ESP',
+    CurrentValue = vu25,
+    Callback = function(p182)
+        vu25 = p182
+    end,
+})
+v16:CreateToggle({
+    Name = 'Team Check',
+    CurrentValue = vu27,
+    Callback = function(p183)
+        vu27 = p183
+    end,
+})
+v16:CreateColorPicker({
+    Name = 'Box Color',
+    Color = vu102,
+    Callback = function(p184)
+        vu102 = p184
+    end,
+})
+v16:CreateColorPicker({
+    Name = 'Skeleton Color',
+    Color = vu104,
+    Callback = function(p185)
+        vu104 = p185
+    end,
+})
+v16:CreateColorPicker({
+    Name = 'Text Color',
+    Color = vu99,
+    Callback = function(p186)
+        vu99 = p186
+    end,
+})
+
+local v187 = v2:CreateTab('Player', nil)
+
+v187:CreateSection('Chams')
+
+local vu188 = Enum.Material.Plastic
+local vu189 = Color3.fromRGB(255, 255, 255)
+local vu190 = false
+local vu191 = {
+    Default = Enum.Material.Plastic,
+    ForceFeild = Enum.Material.ForceField,
+    Neon = Enum.Material.Neon,
+}
+
+v187:CreateDropdown({
+    Name = 'Weapon Chams',
+    Options = {
+        'Default',
+        'ForceFeild',
+        'Neon',
+    },
+    CurrentOption = {
+        'Default',
+    },
+    MultipleOptions = false,
+    Flag = 'Dropdown1',
+    Callback = function(p192)
+        vu188 = vu191[p192[1] ] or Enum.Material.Plastic
+    end,
+})
+v187:CreateColorPicker({
+    Name = 'Weapon Color',
+    Color = Color3.fromRGB(255, 255, 255),
+    Flag = 'ColorPicker1',
+    Callback = function(p193)
+        vu189 = p193
+    end,
+})
+v187:CreateToggle({
+    Name = 'Rainbow Weapon',
+    CurrentValue = false,
+    Flag = 'Toggle1',
+    Callback = function(p194)
+        vu190 = p194
+    end,
+})
+task.spawn(function()
+    while true do
+        task.wait()
+
+        if vu190 then
+            vu189 = Color3.fromHSV(tick() * 0.3 % 1, 1, 1)
+        end
+
+        local v195 = workspace:FindFirstChild('Camera')
+
+        if v195 then
+            v195 = v195:FindFirstChild('Arms')
+        end
+        if v195 then
+            local v196, v197, v198 = ipairs(v195:GetChildren())
+
+            while true do
+                local v199
+
+                v198, v199 = v196(v197, v198)
+
+                if v198 == nil then
+                    break
+                end
+                if v199:IsA('MeshPart') then
+                    v199.Color = vu189
+                    v199.Material = vu188
+                end
+            end
+        end
+    end
+end)
+v187:CreateSection('Other')
+v187:CreateSlider({
+    Name = 'Fov',
+    Range = {
+        20,
+        120
+    },
+    Increment = 1,
+    Suffix = '',
+    CurrentValue = 70,
+    Flag = 'Slider1',
+    Callback = function(p200)
+        game:GetService('Players').LocalPlayer.Settings.FOV.Value = p200
+    end,
+})
+
+local v201 = game:GetService('ReplicatedStorage')
+local vu202 = v201:FindFirstChild('Viewmodels')
+
+if vu202 then
+    vu202 = v201.Viewmodels:FindFirstChild('Arms')
+end
+
+local function vu213(p203)
+    if vu202 then
+        local v204 = vu202
+        local v205, v206, v207 = ipairs(v204:GetChildren())
+
+        while true do
+            local v208
+
+            v207, v208 = v205(v206, v207)
+
+            if v207 == nil then
+                break
+            end
+            if v208:IsA('Folder') or v208:IsA('Model') then
+                local v209 = v208:FindFirstChild('LeftArm') or v208:FindFirstChild('Left Arm')
+                local v210 = v208:FindFirstChild('RightArm') or v208:FindFirstChild('Right Arm')
+
+                if v209 then
+                    v209.Transparency = p203 and 1 or 0
+
+                    if v209:FindFirstChild('Mesh') then
+                        v209.Mesh.Scale = p203 and Vector3.new(0, 0, 0) or Vector3.new(1, 1, 1)
+                    end
+
+                    local v211 = v209:FindFirstChild('Left_Sleeve') or v209:FindFirstChild('Left Sleeve')
+
+                    if v211 then
+                        v211.Transparency = p203 and 1 or 0
+
+                        if v211:FindFirstChild('Mesh') then
+                            v211.Mesh.Scale = p203 and Vector3.new(0, 0, 0) or Vector3.new(1, 1, 1)
+                        end
+                    end
+                end
+                if v210 then
+                    v210.Transparency = p203 and 1 or 0
+
+                    if v210:FindFirstChild('Mesh') then
+                        v210.Mesh.Scale = p203 and Vector3.new(0, 0, 0) or Vector3.new(1, 1, 1)
+                    end
+
+                    local v212 = v210:FindFirstChild('Right_Sleeve') or v210:FindFirstChild('Right Sleeve')
+
+                    if v212 then
+                        v212.Transparency = p203 and 1 or 0
+
+                        if v212:FindFirstChild('Mesh') then
+                            v212.Mesh.Scale = p203 and Vector3.new(0, 0, 0) or Vector3.new(1, 1, 1)
+                        end
+                    end
+                end
+            end
+        end
+    else
+        warn('\u{fffd}\u{fffd} No Arms folder found in ReplicatedStorage.Viewmodels')
+    end
+end
+
+v187:CreateToggle({
+    Name = 'Remove Arms',
+    CurrentValue = false,
+    Flag = 'Toggle1',
+    Callback = function(p214)
+        vu213(p214)
+
+        if p214 then
+            vu1:Notify({
+                Title = 'Arms Removed',
+                Content = 'All character arms and sleeves are now hidden.',
+                Duration = 3,
+            })
+        else
+            vu1:Notify({
+                Title = 'Arms Restored',
+                Content = 'All character arms and sleeves are now visible again.',
+                Duration = 3,
+            })
+        end
+    end,
+})
+v187:CreateDropdown({
+    Name = 'Knife',
+    Options = {
+        'Dagger',
+        'Bone Karambit',
+        'Butterfly Knife',
+        'Pencil',
+        'Candleabra',
+        'Kunai',
+        'Paddle',
+        'Tactical Knife',
+        'Tomahawk',
+        'Balloon Sword',
+        'Fisticuffs',
+        'Karambit',
+        'Skele Scythe',
+        'Saber',
+    },
+    CurrentOption = 'Dagger',
+    MultipleOptions = false,
+    Flag = 'Dropdown1',
+    Callback = function(pu215)
+        pcall(function()
+            local vu216 = game:GetService('Players').LocalPlayer
+
+            if vu216 then
+                vu216 = vu216:FindFirstChild('Data')
+            end
+            if vu216 then
+                vu216 = vu216:FindFirstChild('Melee')
+            end
+            if vu216 then
+                local vu217 = type(pu215) == 'table' and pu215[1] or pu215
+
+                if vu216:IsA('StringValue') then
+                    vu216.Value = tostring(vu217)
+                elseif vu216:IsA('IntValue') then
+                    vu216.Value = tonumber(vu217) or vu216.Value
+                else
+                    pcall(function()
+                        vu216.Value = vu217
+                    end)
+                end
+            end
+        end)
+    end,
+})
+v187:CreateToggle({
+    Name = 'Inf Jump',
+    CurrentValue = false,
+    Flag = 'Toggle1',
+    Callback = function(p218)
+        _G.InfJumpEnabled = p218
+    end,
+})
+
+local v219 = game:GetService('UserInputService')
+local vu220 = game:GetService('Players').LocalPlayer
+
+v219.JumpRequest:Connect(function()
+    if _G.InfJumpEnabled then
+        local v221 = vu220.Character
+
+        if v221 and v221:FindFirstChildOfClass('Humanoid') then
+            v221:FindFirstChildOfClass('Humanoid'):ChangeState(Enum.HumanoidStateType.Jumping)
+        end
+    end
+end)
+
+local vu222 = game:GetService('UserInputService')
+local v223 = game:GetService('Players')
+local v224 = game:GetService('RunService')
+local v225 = v223.LocalPlayer
+local vu226 = (v225.Character or v225.CharacterAdded:Wait()):WaitForChild('HumanoidRootPart')
+local vu227 = false
+local vu228 = 50
+local vu229 = nil
+
+v187:CreateKeybind({
+    Name = 'Fly Hack',
+    CurrentKeybind = 'X',
+    HoldToInteract = false,
+    Flag = 'Keybind1',
+    Callback = function(_)
+        vu227 = not vu227
+
+        if vu227 then
+            vu229 = Instance.new('BodyVelocity')
+            vu229.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+            vu229.Velocity = Vector3.zero
+            vu229.Parent = vu226
+        elseif vu229 then
+            vu229:Destroy()
+
+            vu229 = nil
+        end
+    end,
+})
+v224.RenderStepped:Connect(function()
+    if vu227 and vu229 then
+        local v230 = workspace.CurrentCamera
+        local v231 = Vector3.new()
+
+        if vu222:IsKeyDown(Enum.KeyCode.W) then
+            v231 = v231 + v230.CFrame.LookVector
+        end
+        if vu222:IsKeyDown(Enum.KeyCode.S) then
+            v231 = v231 - v230.CFrame.LookVector
+        end
+        if vu222:IsKeyDown(Enum.KeyCode.A) then
+            v231 = v231 - v230.CFrame.RightVector
+        end
+        if vu222:IsKeyDown(Enum.KeyCode.D) then
+            v231 = v231 + v230.CFrame.RightVector
+        end
+        if vu222:IsKeyDown(Enum.KeyCode.Space) then
+            v231 = v231 + v230.CFrame.UpVector
+        end
+        if vu222:IsKeyDown(Enum.KeyCode.LeftControl) then
+            v231 = v231 - v230.CFrame.UpVector
+        end
+        if v231.Magnitude <= 0 then
+            vu229.Velocity = Vector3.zero
+        else
+            vu229.Velocity = v231.Unit * vu228
+        end
+    end
+end)
+v187:CreateSection('Weapon Mods')
+
+local v232 = game:GetService('ReplicatedStorage')
+local _ = game:GetService('Players').LocalPlayer
+local vu233 = v232:FindFirstChild('Weapons')
+
+if vu233 then
+    local function vu241(p234, p235, pu236)
+        local v237, v238, v239 = ipairs(p234:GetChildren())
+
+        while true do
+            local vu240
+
+            v239, vu240 = v237(v238, v239)
+
+            if v239 == nil then
+                break
+            end
+            if vu240.Name == p235 and vu240:IsA('ValueBase') then
+                pcall(function()
+                    vu240.Value = pu236
+                end)
+            end
+        end
+    end
+    local function vu248(p242)
+        local v243 = vu233
+        local v244, v245, v246 = ipairs(v243:GetChildren())
+
+        while true do
+            local v247
+
+            v246, v247 = v244(v245, v246)
+
+            if v246 == nil then
+                break
+            end
+            if v247:IsA('Folder') then
+                p242(v247)
+            end
+        end
+    end
+
+    v187:CreateButton({
+        Name = 'Remove Spread',
+        Callback = function()
+            vu248(function(p249)
+                vu241(p249, 'Spread', 0)
+                vu241(p249, 'MaxSpread', 0)
+            end)
+            vu1:Notify({
+                Title = 'Success',
+                Content = 'Spread removed on all weapons!',
+                Duration = 3,
+            })
+        end,
+    })
+    v187:CreateButton({
+        Name = 'No Recoil',
+        Callback = function()
+            vu248(function(p250)
+                vu241(p250, 'RecoilControl', 0)
+            end)
+            vu1:Notify({
+                Title = 'Success',
+                Content = 'Recoil disabled on all weapons!',
+                Duration = 3,
+            })
+        end,
+    })
+    v187:CreateButton({
+        Name = 'Max Ammo',
+        Callback = function()
+            vu248(function(p251)
+                vu241(p251, 'Ammo', 999)
+                vu241(p251, 'StoredAmmo', 300)
+            end)
+            vu1:Notify({
+                Title = 'Success',
+                Content = 'Ammo set',
+                Duration = 3,
+            })
+        end,
+    })
+    v187:CreateButton({
+        Name = 'Full Auto',
+        Callback = function()
+            vu248(function(p252)
+                vu241(p252, 'Auto', true)
+            end)
+            vu1:Notify({
+                Title = 'Success',
+                Content = 'Full Auto enabled for all weapons!',
+                Duration = 3,
+            })
+        end,
+    })
+    v187:CreateButton({
+        Name = 'Max FireRate',
+        Callback = function()
+            vu248(function(p253)
+                vu241(p253, 'FireRate', 0.05)
+            end)
+            vu1:Notify({
+                Title = 'Success',
+                Content = 'FireRate set to max!',
+                Duration = 3,
+            })
+        end,
+    })
+
+    local v254 = v2:CreateTab('World', nil)
+
+    v254:CreateSection('Sky')
+
+    local vu255 = game:GetService('Lighting')
+
+    local function vu256()
+        return vu255:FindFirstChildOfClass('Sky') or Instance.new('Sky', vu255)
+    end
+
+    local vu257 = {
+        Default = {
+            SkyboxBk = '',
+            SkyboxDn = '',
+            SkyboxFt = '',
+            SkyboxLf = '',
+            SkyboxRt = '',
+            SkyboxUp = '',
+        },
+        Galaxy = {
+            SkyboxBk = 'rbxassetid://13726625670',
+            SkyboxDn = 'rbxassetid://13726625670',
+            SkyboxFt = 'rbxassetid://13726625670',
+            SkyboxLf = 'rbxassetid://13726625670',
+            SkyboxRt = 'rbxassetid://13726625670',
+            SkyboxUp = 'rbxassetid://13726625670',
+        },
+        Magma = {
+            SkyboxBk = 'rbxassetid://16468735533',
+            SkyboxDn = 'rbxassetid://16468735533',
+            SkyboxFt = 'rbxassetid://16468735533',
+            SkyboxLf = 'rbxassetid://16468735533',
+            SkyboxRt = 'rbxassetid://16468735533',
+            SkyboxUp = 'rbxassetid://16468735533',
+        },
+    }
+    local vu258 = 'Default'
+
+    local function vu265()
+        local v259 = vu256()
+        local v260 = vu257[vu258]
+
+        if v260 then
+            local v261, v262, v263 = pairs(v260)
+
+            while true do
+                local v264
+
+                v263, v264 = v261(v262, v263)
+
+                if v263 == nil then
+                    break
+                end
+
+                v259[v263] = v264
+            end
+        end
+    end
+
+    v254:CreateDropdown({
+        Name = 'SkyBox',
+        Options = {
+            'Default',
+            'Galaxy',
+            'Magma',
+        },
+        CurrentOption = {
+            'Default',
+        },
+        MultipleOptions = false,
+        Flag = 'Dropdown1',
+        Callback = function(p266)
+            vu258 = p266[1]
+
+            vu265()
+        end,
+    })
+    task.spawn(function()
+        while true do
+            task.wait(10)
+            vu265()
+        end
+    end)
+else
+    warn('No Weapons folder found in ReplicatedStorage')
+end
