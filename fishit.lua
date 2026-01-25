@@ -156,7 +156,7 @@ end
 -----------------------------------------
 
 local CheckData = {
-    pasteURL = "https://raw.githubusercontent.com/quietxhub99/raul/refs/heads/main/upd.txt",
+    pasteURL = "https://pastefy.app/TNZtzh3O/raw",
     interval = 30,
     kicked = false,
     notified = false
@@ -176,15 +176,15 @@ local function checkStatus()
     if response == "UPDATE" then
         if not CheckData.kicked then
             CheckData.kicked = true
-            LocalPlayer:Kick("QuietXHub Premium Update Available!.")
+            LocalPlayer:Kick("NoctyraHub Premium Update Available!.")
         end
     elseif response == "LATEST" then
         if not CheckData.notified then
             CheckData.notified = true
-            warn("[QuietXHub] Status: Latest version")
+            warn("[NoctyraHub] Status: Latest version")
         end
     else
-        warn("[QuietXHub] Status unknown:", response)
+        warn("[NoctyraHub] Status unknown:", response)
     end
 end
 
@@ -219,7 +219,7 @@ WindUI:AddTheme({
     Icon = Color3.fromHex("#2DD4FF")           -- Aqua Highlight
 })
 
-_G.THEME_RAW_URL = "https://pastebin.com/raw/KfJ0jGmL"
+_G.THEME_RAW_URL = "https://pastefy.app/SZc0pFur/raw"
 
 function LoadThemesFromRaw(url)
     local success, themes = pcall(function()
@@ -266,13 +266,13 @@ WindUI.TransparencyValue = 0.15
 
 local Window = WindUI:CreateWindow({
     Title = "Fish It",
-    Icon = "https://i.ibb.co.com/1f7VL9vB/20251225-155001.png",
+    Icon = "https://i.ibb.co.com/rGwcvBcS/1768006325-Photoroom.png",
     IconSize = 18*2,
     Size = UDim2.fromOffset(580, 460),
-    Author = "by Prince",
-    Folder = "QuietXHub",
+    Author = "by Noctyra",
+    Folder = "NoctyraHub",
     Transparent = true,
-    Theme = "QuietOcean",
+    Theme = "BloodAbyss",
     ToggleKey = Enum.KeyCode.G,
     KeySystem = false,
     ScrollBarEnabled = true,
@@ -289,13 +289,13 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "QueitXHub",
-    Icon = "https://i.ibb.co.com/1f7VL9vB/20251225-155001.png",
+    Title = "NoctyraHub",
+    Icon = "https://i.ibb.co.com/rGwcvBcS/1768006325-Photoroom.png",
     IconSize = 18*2,
     CornerRadius = UDim.new(0, 28),
     StrokeThickness = 0.5,
     Color = ColorSequence.new(
-        Color3.fromHex("#2DD4FF"),
+        Color3.fromHex("#bd1f8d"),
         Color3.fromHex("#0A2E47")
     ),
     OnlyMobile = false,
@@ -305,7 +305,7 @@ Window:EditOpenButton({
 
 Window:Tag({
     Title = "PREMIUM",
-    Color = Color3.fromHex("#F6D87B") -- Gold Pearl
+    Color = Color3.fromHex("#ff5e00") -- Gold Pearl
 })
 
 local ConfigManager = Window.ConfigManager
@@ -313,7 +313,7 @@ local myConfig = ConfigManager:CreateConfig("QuietXConfig")
 
 
 WindUI:Notify({
-    Title = "QuietXHub",
+    Title = "NoctyraHub",
     Content = "All Features Loaded!",
     Duration = 5,
     Image = "square-check-big"
@@ -452,7 +452,7 @@ local function LookupDiscordInvite(inviteCode)
     end
 end
 
-local inviteCode = "vf5nUduRxq"
+local inviteCode = "nacepzPQKh"
 local inviteData = LookupDiscordInvite(inviteCode)
 
 if inviteData then
@@ -495,116 +495,6 @@ end
 
 Home:Divider()
 
-Home:Section({
-    Title = "Script Information",
-    TextSize = 22,
-    TextXAlignment = "Center",
-})
-
-Home:Divider()
-
-_G.ONLINE_API_BASE = "https://quietxhub.my.id"
-_G.SCRIPT_ID = "qxqonline"
-_G.UPDATE_INTERVAL = 20
-
-_G.httpRequest = (syn and syn.request)
-    or http_request
-    or request
-    or (fluxus and fluxus.request)
-
-if not _G.httpRequest then
-    warn("HTTP request not supported by this executor")
-end
-
-_G.OnlineParagraph = Home:Paragraph({
-    Title = "All Script Information",
-    Desc = "Scripter Online : ...\nSince : 10 Juli 2025\nThe First Fish It Script",
-    Image = "https://i.ibb.co.com/5xhFcgqY/QUIETXHUB-20260108-083208-0000.png",
-    ImageSize = 50,
-    Locked = false,
-    Buttons = {
-        {
-            Icon = "",
-            Title = "Join Discord",
-            Callback = function() setclipboard("https://discord.gg/" .. inviteCode) NotifySuccess("Discord", "Invite link copied to clipboard!") end
-        },
-    }
-})
-
-_G.UpdateParagraph = function(text)
-    if _G.OnlineParagraph.SetDesc then
-        _G.OnlineParagraph:SetDesc(text)
-    elseif _G.OnlineParagraph.Update then
-        _G.OnlineParagraph:Update({ Desc = text })
-    end
-end
-
-_G.CLIENT_ID = LocalPlayer.UserId .. "-" .. math.random(100000, 999999)
-
-_G.PingServer = function()
-    if not _G.httpRequest then return end
-
-    local payload = HttpService:JSONEncode({
-        script = _G.SCRIPT_ID,
-        client = _G.CLIENT_ID
-    })
-
-    pcall(function()
-        _G.httpRequest({
-            Url = _G.ONLINE_API_BASE .. "/ping",
-            Method = "POST",
-            Headers = { ["Content-Type"] = "application/json" },
-            Body = payload
-        })
-    end)
-end
-
-
-_G.FetchOnline = function()
-    if not _G.httpRequest then
-        _G.UpdateParagraph("🔴 HTTP unsupported")
-        return
-    end
-
-    local response
-    local ok = pcall(function()
-        response = _G.httpRequest({
-            Url = _G.ONLINE_API_BASE .. "/online?script=" .. _G.SCRIPT_ID,
-            Method = "GET"
-        })
-    end)
-
-    if not ok or not response or not response.Body then
-        _G.UpdateParagraph("🔴 Server offline")
-        return
-    end
-
-    local data
-    local decodeOk = pcall(function()
-        data = HttpService:JSONDecode(response.Body)
-    end)
-
-    if not decodeOk or not data or not data.online then
-        _G.UpdateParagraph("⚠ Invalid server data")
-        return
-    end
-
-    local dots = string.rep(".", (math.floor(os.clock()) % 3) + 1)
-
-    _G.UpdateParagraph(
-        "Scripter Online : " .. tostring(data.online) .. " Player" .. dots ..
-        "\nSince : 10 Juli 2025" ..
-        "\nThe First Fish It Script"
-    )
-end
-
-task.spawn(function()
-    while true do
-        _G.PingServer()
-        _G.FetchOnline()
-        task.wait(_G.UPDATE_INTERVAL)
-    end
-end)
 
 if getgenv().AutoRejoinConnection then
     getgenv().AutoRejoinConnection:Disconnect()
@@ -1002,425 +892,6 @@ _G.AccConfig:Button({
 })
 
 _G.AccConfig:Space()
-
--------------------------------------------
--- =======[ CHRISTMAS EVENT - FINAL ]
--------------------------------------------
-
-_G.CEvent:Divider()
-
-_G.CEvent:Section({
-    Title = "Christmas Event Menu",
-    TextSize = 22,
-    TextXAlignment = "Center",
-    Opened = true
-})
-
-_G.CEvent:Divider()
-
-_G.PresentParagraph = _G.CEvent:Paragraph({
-    Title = "Auto Christmas Event",
-    Desc = "Idle",
-    Thumbnail = "https://i.ibb.co.com/DP3Rx9Kt/Pngtree-free-christmas-tree-with-gift-15824230.jpg",
-    ThumbnailSize = 80
-})
-
-function setUI(text)
-    if _G.PresentParagraph then
-        _G.PresentParagraph:SetDesc(text)
-    end
-end
-
--------------------------------------------------
--- LIBRARIES
--------------------------------------------------
-_G.Replion = require(
-    ReplicatedStorage.Packages._Index["ytrev_replion@2.0.0-rc.3"].replion
-)
-
-_G.ItemUtility = require(
-    ReplicatedStorage.Shared.ItemUtility
-)
-
-_G.ItemStringUtility = require(
-    ReplicatedStorage.Modules.ItemStringUtility
-)
-
--------------------------------------------------
--- REMOTES
--------------------------------------------------
-_G.RFSpecialDialogueEvent =
-    ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"]
-        .net["RF/SpecialDialogueEvent"]
-
-_G.REEquipItem =
-    ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"]
-        .net["RE/EquipItem"]
-
-_G.REEquipToolFromHotbar =
-    ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"]
-        .net["RE/EquipToolFromHotbar"]
-
-_G.RFRedeemGift =
-    ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"]
-        .net["RF/RedeemGift"]
-
--------------------------------------------------
--- GLOBAL STATE
--------------------------------------------------
-_G.AutoChristmasEvent = false
-_G.__ChristmasThread = nil
-_G.RedeemDelay = 2
-
--------------------------------------------------
--- INVENTORY SCAN (GEARS PRESENT ONLY)
--------------------------------------------------
-_G.GetPresentItems = function()
-    local DataReplion = _G.Replion.Client:WaitReplion("Data")
-    if not DataReplion then return {} end
-
-    local items = DataReplion:Get({ "Inventory", "Items" }) or {}
-    local result = {}
-
-    for _, item in ipairs(items) do
-    if item and item.Id then
-        local base = _G.ItemUtility:GetItemData(item.Id)
-        if base and base.Data then
-            if base.Data.Type == "Gears" then
-                local name = _G.ItemStringUtility.GetItemName(item, base)
-                if name then
-                    if string.find(string.lower(name), "present") then
-                        table.insert(result, {
-                            Name = name,
-                            UUID = item.UUID
-                        })
-                    end
-                end
-            end
-        end
-    end
-end
-
-    return result
-end
-
--------------------------------------------------
--- CLAIM ALL CHRISTMAS DOORS
--------------------------------------------------
-_G.ClaimDoors = function()
-    local folder = workspace:FindFirstChild("ChristmasDoors")
-    if not folder then return end
-
-    for _, door in ipairs(folder:GetChildren()) do
-        pcall(function()
-            _G.RFSpecialDialogueEvent:InvokeServer(
-                door.Name,
-                "PresentChristmasDoor"
-            )
-        end)
-        task.wait(0.4)
-    end
-end
-
--------------------------------------------------
--- REDEEM PRESENTS
--------------------------------------------------
-_G.RedeemAllPresents = function()
-    local presents = _G.GetPresentItems()
-
-    if #presents == 0 then
-        setUI("No Present found in inventory.")
-        return false
-    end
-
-    for i, item in ipairs(presents) do
-        if not _G.AutoChristmasEvent then return false end
-
-        setUI(string.format(
-            "[%d/%d]\nRedeeming %s",
-            i, #presents, item.Name
-        ))
-
-        pcall(function()
-            _G.REEquipItem:FireServer(item.UUID, "Gears")
-        end)
-
-        task.wait(0.6)
-
-        pcall(function()
-            _G.REEquipToolFromHotbar:FireServer(6)
-        end)
-
-        task.wait(0.6)
-
-        pcall(function()
-            _G.RFRedeemGift:InvokeServer()
-        end)
-
-        task.wait(_G.RedeemDelay)
-    end
-
-    return true
-end
-
--------------------------------------------------
--- MAIN LOOP
--------------------------------------------------
-_G.StartChristmasLoop = function()
-    if _G.__ChristmasThread then return end
-
-    _G.__ChristmasThread = task.spawn(function()
-        while _G.AutoChristmasEvent do
-            -- =========================
-            -- STEP 1: CLAIM DOORS
-            -- =========================
-            setUI("Claiming Christmas Presents...")
-            pcall(_G.ClaimDoors)
-
-            -- =========================
-            -- STEP 2: WAIT SERVER SYNC
-            -- =========================
-            setUI("Syncing inventory...")
-            for i = 1, 6 do
-                if not _G.AutoChristmasEvent then break end
-                task.wait(1)
-            end
-
-            -- =========================
-            -- STEP 3: SCAN & REDEEM
-            -- =========================
-            local count = #_G.GetPresentItems()
-
-            if count > 0 then
-                setUI(("Found %d Present(s).\nRedeeming..."):format(count))
-                _G.RedeemAllPresents()
-                setUI("Redeem finished.")
-            else
-                setUI("No Present available this cycle.")
-            end
-            
-            task.wait(1)
-
-            -- =========================
-            -- STEP 4: COOLDOWN
-            -- =========================
-            
-            setUI("Cooldown... Next check in 1 hour.")
-            local start = tick()
-            while _G.AutoChristmasEvent and (tick() - start) < 3600 do
-                task.wait(1)
-            end
-        end
-
-        _G.__ChristmasThread = nil
-    end)
-end
-
-_G.StopChristmasLoop = function()
-    _G.AutoChristmasEvent = false
-end
-
--------------------------------------------------
--- TOGGLE
--------------------------------------------------
-_G.CEvent:Toggle({
-    Title = "Auto Christmas Event (Claim + Redeem)",
-    Value = false,
-    Callback = function(state)
-        _G.AutoChristmasEvent = state
-
-        if state then
-            setUI("Starting...")
-            _G.StartChristmasLoop()
-        else
-            setUI("Disabled.")
-            _G.StopChristmasLoop()
-        end
-    end
-})
-
-_G.Players = game:GetService("Players")
-_G.LocalPlayer = _G.Players.LocalPlayer
-_G.Workspace = game:GetService("Workspace")
-
-_G.AutoClaimPresent = {
-    enabled = false,
-    loop = nil
-}
-
-_G.PresentCounter = {
-    total = 0,
-    connAdd = nil,
-    connRemove = nil,
-    loop = nil
-}
-
-_G.CEvent:Space()
-
-_G.CEvent:Divider()
-
-_G.PresentParaTwo = _G.CEvent:Paragraph({
-    Title = "Christmas Present Monitor",
-    Desc = "Available Presents : 0\nAuto Claim : OFF",
-    Locked = true
-})
-
-
-_G.countPresents = function()
-    local folder = _G.getChristmasFolder()
-    if not folder then
-        return 0
-    end
-
-    local count = 0
-    for _, v in ipairs(folder:GetChildren()) do
-        if v:IsA("Model") then
-            count = count + 1
-        end
-    end
-
-    return count
-end
-
-_G.startPresentFallbackLoop = function()
-    if _G.PresentCounter.loop then return end
-
-    _G.PresentCounter.loop = task.spawn(function()
-        while true do
-            _G.updatePresentParagraph()
-            task.wait(2)
-        end
-    end)
-end
-
-_G.startPresentMonitor = function()
-    local folder = _G.getChristmasFolder()
-    if not folder then return end
-
-    -- Bersihkan listener lama
-    if _G.PresentCounter.connAdd then
-        _G.PresentCounter.connAdd:Disconnect()
-    end
-    if _G.PresentCounter.connRemove then
-        _G.PresentCounter.connRemove:Disconnect()
-    end
-
-    -- Initial update
-    _G.updatePresentParagraph()
-
-    -- Realtime ADD
-    _G.PresentCounter.connAdd = folder.ChildAdded:Connect(function(child)
-        if child:IsA("Model") then
-            task.defer(_G.updatePresentParagraph)
-        end
-    end)
-
-    -- Realtime REMOVE
-    _G.PresentCounter.connRemove = folder.ChildRemoved:Connect(function(child)
-        if child:IsA("Model") then
-            task.defer(_G.updatePresentParagraph)
-        end
-    end)
-end
-
-_G.updatePresentParagraph = function()
-    if not _G.PresentParaTwo then return end
-
-    local total = _G.countPresents()
-    _G.PresentCounter.total = total
-
-    _G.PresentParaTwo:SetDesc(
-        ("Available Presents : %d\nAuto Claim : %s"):format(
-            total,
-            _G.AutoClaimPresent.enabled and "ON" or "OFF"
-        )
-    )
-end
-
-_G.getHRP = function()
-    local char = LocalPlayer.Character
-    return char and char:FindFirstChild("HumanoidRootPart")
-end
-
-_G.getChristmasFolder = function()
-    return Workspace:FindFirstChild("ChristmasPresents")
-end
-
-_G.claimAllPresents = function()
-    local hrp = _G.getHRP()
-    local folder = _G.getChristmasFolder()
-    if not (hrp and folder) then return end
-
-    for _, present in ipairs(folder:GetChildren()) do
-        if not _G.AutoClaimPresent.enabled then break end
-        if present:IsA("Model") then
-            local prompt =
-                present:FindFirstChildWhichIsA("ProximityPrompt", true)
-
-            if prompt and prompt.Parent then
-                local part =
-                    prompt.Parent:IsA("BasePart")
-                    and prompt.Parent
-                    or present:FindFirstChildWhichIsA("BasePart", true)
-
-                if part then
-                    -- 🚀 Teleport ke present
-                    hrp.CFrame = part.CFrame * CFrame.new(0, 0, -2)
-
-                    task.wait(0.1)
-
-                    -- 🔔 Fire ProximityPrompt
-                    pcall(function()
-                        fireproximityprompt(prompt)
-                    end)
-
-                    task.wait(0.15)
-                end
-            end
-        end
-    end
-end
-
-_G.startAutoClaimPresent = function()
-    if _G.AutoClaimPresent.loop then return end
-
-    _G.AutoClaimPresent.loop = task.spawn(function()
-        while _G.AutoClaimPresent.enabled do
-            _G.claimAllPresents()
-            task.wait(1) -- ulangi jika ada drop baru
-        end
-    end)
-end
-
-_G.stopAutoClaimPresent = function()
-    if _G.AutoClaimPresent.loop then
-        task.cancel(_G.AutoClaimPresent.loop)
-        _G.AutoClaimPresent.loop = nil
-    end
-end
-
-_G.CEvent:Toggle({
-    Title = "Auto Claim Drop Present",
-    Value = false,
-    Callback = function(state)
-        _G.AutoClaimPresent.enabled = state
-        _G.updatePresentParagraph()
-    
-        if state then
-            _G.startAutoClaimPresent()
-        else
-            _G.stopAutoClaimPresent()
-        end
-    end
-})
-
-task.spawn(function()
-    task.wait(1)
-    _G.startPresentMonitor()
-    _G.startPresentFallbackLoop()
-end)
-
-_G.CEvent:Divider()
 
 -------------------------------------------
 ----- =======[ AUTO FISH TAB ]
@@ -3724,7 +3195,8 @@ local islandCodes = {
     ["14"] = "Secret Farm Ancient",
     ["15"] = "The Temple (Unlock First)",
     ["16"] = "Ancient Ruin",
-    ["17"] = "Christmas Island"
+    ["18"] = "Pirate Cove",
+    ["18"] = "Pirate Treasure Room"
 }
 
 local farmLocations = {
@@ -3853,12 +3325,16 @@ local farmLocations = {
         CFrame.new(6022.87109, -585.924194, 4631.0127, -0.669677734, -6.96009084e-10, -0.74265182, -5.20333909e-09, 1, 3.75485687e-09, 0.74265182, 6.37881348e-09, -0.669677734),
         CFrame.new(6057.14893, -557.975098, 4485.46631, -0.985172093, -3.35700534e-08, -0.171569183, -3.98707982e-08, 1, 3.32783721e-08, 0.171569183, 3.9625526e-08, -0.985172093)
     },
-    ["Christmas Island"] = {
-        CFrame.new(1164.52563, 24.2395878, 1497.37585, 0.0651856363, 9.78068471e-08, 0.997873127, -7.8768096e-08, 1, -9.28698185e-08, -0.997873127, -7.25467899e-08, 0.0651856363),
-        CFrame.new(1161.08643, 23.7999992, 1530.70715, -0.962064207, 2.33530362e-10, 0.272823215, 1.85178362e-08, 1, 6.4443995e-08, -0.272823215, 6.70513529e-08, -0.962064207),
-        CFrame.new(1177.27295, 23.5436211, 1549.23669, -0.182084903, 6.89579807e-08, 0.983282804, -1.50466839e-08, 1, -7.29167127e-08, -0.983282804, -2.80721792e-08, -0.182084903),
-        CFrame.new(1139.6543, 23.59935, 1564.44116, 0.595472097, 0, -0.803376019, 0, 1, 0, 0.803376019, 0, 0.595472097)
-    }
+    ["Pirate Cove"] = {
+        CFrame.new(3469.79932, 4.19277096, 3496.23315, 0.598028243, -1.68198007e-08, 0.801475048, 3.59461581e-08, 1, -5.83551296e-09, -0.801475048, 3.22997487e-08, 0.598028243),
+        CFrame.new(3423.27734, 4.19297075, 3433.854, -0.852984607, -4.74888253e-08, -0.521936059, -8.19830319e-08, 1, 4.29965361e-08, 0.521936059, 7.94652877e-08, -0.852984607)
+    },
+
+        ["Pirate Treasure Room"] = {
+        CFrame.new(3342.62842, -303.497864, 3031.78931, -0.974473, 4.25567244e-08, 0.224504679, 2.92667632e-08, 1, -6.25245491e-08, -0.224504679, -5.43579617e-08, -0.974473),
+        CFrame.new(3309.69922, -304.120056, 3031.46533, -0.833008647, 3.85916898e-08, -0.553259969, 1.32056241e-08, 1, 4.9870394e-08, 0.553259969, 3.42363258e-08, -0.833008647),
+        CFrame.new(3338.89404, -302.507324, 3089.49756, 0.908972621, 1.19190865e-07, 0.416855842, -1.08876826e-07, 1, -4.85175207e-08, -0.416855842, -1.2848439e-09, 0.908972621)
+    },
 
 }
 
@@ -3958,10 +3434,8 @@ _G.FarmSec = AutoFarmTab:Section({
 -- GLOBAL FLAGS
 -------------------------------------------------
 _G.AutoLochNess = false
-_G.AutoChristmasCave = false
 
 _G.LochStatus = "Idle"
-_G.CaveStatus = "Waiting Event..."
 
 -------------------------------------------------
 -- SERVICES
@@ -3974,10 +3448,6 @@ _G.CountdownLabel =
     workspace["!!! DEPENDENCIES"]["Event Tracker"]
         .Main.Gui.Content.Items.Countdown.Label
 
-_G.CaveLabel =
-    workspace.Map.CavernTeleporter
-        .StartTeleport.Gui.Frame.NewLabel
-
 -------------------------------------------------
 -- CFRAMES
 -------------------------------------------------
@@ -3988,25 +3458,14 @@ local LOCHNESS_CFRAME = CFrame.new(
     0.999767482, 0, 0.0215646587
 )
 
-_G.ChristmasCaveCFrames = {
-    CFrame.new(605.692871, -580.58136, 8887.51074, 0.0267926417, -8.79793234e-08, 0.999641001, -2.50977159e-08, 1, 8.8683592e-08, -0.999641001, -2.74647753e-08, 0.0267926417),
-    CFrame.new(576.37677, -580.58136, 8931.45312, 0.968435466, -5.87835451e-08, -0.249264464, 4.9410648e-08, 1, -4.38591208e-08, 0.249264464, 3.01584109e-08, 0.968435466),
-    CFrame.new(694.887695, -487.111328, 8913.8877, 0.991148233, 3.50480462e-08, -0.132759795, -3.17826441e-08, 1, 2.67154086e-08, 0.132759795, -2.22594725e-08, 0.991148233),
-    CFrame.new(746.483093, -487.112, 8926.44238, 0.689154983, -5.98709349e-09, -0.724613965, -4.31799663e-09, 1, -1.23691546e-08, 0.724613965, 1.16531451e-08, 0.689154983),
-    CFrame.new(743.71759, -487.110687, 8862.72656, -0.911057472, 1.73095618e-08, -0.412279397, 1.06622533e-08, 1, 1.84235134e-08, 0.412279397, 1.23890525e-08, -0.911057472),
-}
-
 -------------------------------------------------
 -- STATE
 -------------------------------------------------
-_G.OriginalCFrame_Cave = nil
-_G.CaveState = {
-    HasTeleported = false
-}
 _G.CaveReturnScheduled = false
 _G.LochEventRunning = false
 _G.LochEventEndTime = nil
 _G.OriginalCFrame_Loch = nil
+
 -------------------------------------------------
 -- UI
 -------------------------------------------------
@@ -4017,10 +3476,9 @@ _G.EventParagraph = _G.FarmSec:Paragraph({
 
 function _G.UpdateEventUI()
     _G.EventParagraph:SetDesc(string.format(
-        "Lochness : %s\nCountdown: %s\nChristmas Cave : %s",
+        "LochNess : %s\nCountdown: %s",
         _G.LochStatus,
-        _G.CountdownLabel.Text or "N/A",
-        _G.CaveStatus
+        _G.CountdownLabel.Text or "N/A"
     ))
 end
 
@@ -4032,38 +3490,6 @@ _G.FarmSec:Toggle({
     Callback = function(v)
         _G.AutoLochNess = v
         _G.LochStatus = v and "Monitoring..." or "Idle"
-        _G.UpdateEventUI()
-    end
-})
-
-_G.FarmSec:Toggle({
-    Title = "Auto Christmas Cave",
-    Callback = function(v)
-        _G.AutoChristmasCave = v
-
-        local hrp = LocalPlayer.Character
-            and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-
-        if v then
-            -- SIMPAN PAKSA POSISI AWAL (SATU-SATUNYA SUMBER KEBENARAN)
-            if hrp then
-                _G.OriginalCFrame_Cave = hrp.CFrame
-            end
-
-            _G.CaveStatus = "Monitoring..."
-            _G.__ForceCaveRecheck = true
-        else
-            -- JIKA DIMATIKAN, KEMBALI KE POSISI AWAL
-            if _G.OriginalCFrame_Cave then
-                ForceReturnToOriginal(_G.OriginalCFrame_Cave)
-            end
-
-            _G.CaveState.HasTeleported = false
-            _G.OriginalCFrame_Cave = nil
-            _G.CaveReturnScheduled = false
-            _G.CaveStatus = "Disabled"
-        end
-
         _G.UpdateEventUI()
     end
 })
@@ -4102,6 +3528,9 @@ function ForceReturnToOriginal(cf)
     hrp.Anchored = false
 end
 
+-------------------------------------------------
+-- LOCHNESS LOGIC (STABLE)
+-------------------------------------------------
 -------------------------------------------------
 -- LOCHNESS LOGIC (FIXED & DETERMINISTIC)
 -------------------------------------------------
@@ -4170,81 +3599,6 @@ function OnCountdownChanged()
 end
 
 _G.CountdownLabel:GetPropertyChangedSignal("Text"):Connect(OnCountdownChanged)
-
--------------------------------------------------
--- CHRISTMAS CAVE LOGIC (FINAL & SAFE)
--------------------------------------------------
-task.spawn(function()
-    local lastText = ""
-
-    while task.wait(0.5) do
-        if _G.__ForceCaveRecheck then
-            lastText = ""
-            _G.__ForceCaveRecheck = false
-        end
-
-        if _G.CaveLabel then
-            local text = _G.CaveLabel.Text
-
-            if text ~= lastText then
-                lastText = text
-
-                -- ===============================
-                -- EVENT CLOSED (SELALU DIMONITOR)
-                -- ===============================
-                if text:upper():find("CAVE CLOSED") then
-                    _G.CaveStatus = "Waiting Event..."
-                    _G.UpdateEventUI()
-
-                    if _G.CaveState.HasTeleported
-                        and _G.OriginalCFrame_Cave
-                        and not _G.CaveReturnScheduled
-                    then
-                        _G.CaveReturnScheduled = true
-
-                        task.spawn(function()
-                            -- BIARKAN SERVER MENYELESAIKAN TELEPORT & ALIGNMENT
-                            task.wait(10)
-
-                            -- FORCE RETURN KE POSISI MURNI
-                            ForceReturnToOriginal(_G.OriginalCFrame_Cave)
-
-                            _G.CaveState.HasTeleported = false
-                            _G.CaveReturnScheduled = false
-                        end)
-                    end
-
-                -- ===============================
-                -- EVENT OPEN (HANYA JIKA TOGGLE ON)
-                -- ===============================
-                else
-                    if _G.AutoChristmasCave
-                        and not _G.CaveState.HasTeleported
-                    then
-                        local hrp =
-                            LocalPlayer.Character
-                            and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-
-                        if hrp then
-                            _G.CaveStatus = "Teleporting..."
-                            _G.UpdateEventUI()
-
-                            SafeTeleport(
-                                _G.ChristmasCaveCFrames[
-                                    math.random(#_G.ChristmasCaveCFrames)
-                                ]
-                            )
-
-                            _G.CaveState.HasTeleported = true
-                            _G.CaveStatus = "Farming..."
-                            _G.UpdateEventUI()
-                        end
-                    end
-                end
-            end
-        end
-    end
-end)
 
 -------------------------------------------------
 -- UI REFRESH FAILSAFE
@@ -5689,7 +5043,7 @@ local islandCoords = {
     ["15"] = { name = "The Temple", position = Vector3.new(1477, -22, -631) },
     ["16"] = { name = "Underground Cellar", position = Vector3.new(2133, -91, -674) },
     ["17"] = {name = "Ancient Ruin", position = Vector3.new(6052, -546, 4427) },
-    ["20"] = {name = "Christmas Island", position = Vector3.new(873, 26, 1564)}
+    ["21"] = {name = "Pirate Cove", position = Vector3.new(3497, 4, 3447) }
 }
 
 local islandNames = {}
@@ -6040,18 +5394,32 @@ local function getInventoryCount()
 end
 
 local function validateWebhook(path)
-    local pasteUrl = "https://paste.monster/" .. path .. "/raw/"
-    local success, response = pcall(function()
-        return game:HttpGet(pasteUrl)
-    end)
-
-    if not success or not response then
-        return false, "Failed to connect"
+    if not path or path == "" then
+        return false, "Empty input"
     end
 
-    local webhook = response:match("https://discord%.com/api/webhooks/%d+/[%w_-]+")
-    if not webhook then
-        return false, "No valid webhook found"
+    local webhook = nil
+
+    -- Jika user memasukkan URL Discord penuh, gunakan langsung
+    if string.find(path, "discord%.com/api/webhooks") or string.find(path, "discordapp%.com/api/webhooks") then
+        webhook = path:match("(https?://[^%s]+)")
+        if not webhook then
+            return false, "No valid webhook URL found"
+        end
+    else
+        local pasteUrl = "https://paste.monster/" .. path .. "/raw/"
+        local success, response = pcall(function()
+            return game:HttpGet(pasteUrl)
+        end)
+
+        if not success or not response then
+            return false, "Failed to connect"
+        end
+
+        webhook = response:match("https?://discord%.com/api/webhooks/%d+/[%w_-]+") or response:match("https?://discordapp%.com/api/webhooks/%d+/[%w_-]+")
+        if not webhook then
+            return false, "No valid webhook found in paste"
+        end
     end
 
     local checkSuccess, checkResponse = pcall(function()
@@ -6070,7 +5438,7 @@ local function validateWebhook(path)
         return false, "Invalid Webhook"
     end
 
-    local webhookPath = webhook:match("discord%.com/api/webhooks/(.+)")
+    local webhookPath = webhook:match("discord%.com/api/webhooks/(.+)") or webhook:match("discordapp%.com/api/webhooks/(.+)")
     return true, webhookPath
 end
 
@@ -6345,9 +5713,9 @@ end
 
 _G.BNNotif = true
 local apiKey = FishNotif:Input({
-    Title = "Key Notification",
-    Desc = "Input your private key!",
-    Placeholder = "Enter Key....",
+    Title = "Webhook / Key",
+    Desc = "Enter full Discord webhook URL or paste.monster key (either is supported).",
+    Placeholder = "https://discord.com/api/webhooks/...  OR  pasteKey",
     Callback = function(text)
         if _G.BNNotif then
             _G.BNNotif = false
@@ -6358,14 +5726,14 @@ local apiKey = FishNotif:Input({
         if isValid then
             webhookPath = result
             WindUI:Notify({
-                Title = "Key Valid",
-                Content = "Webhook connected to channel!",
+                Title = "Webhook Connected",
+                Content = "Webhook linked successfully!",
                 Duration = 5,
                 Icon = "circle-check"
             })
         else
             WindUI:Notify({
-                Title = "Key Invalid",
+                Title = "Invalid Webhook",
                 Content = tostring(result),
                 Duration = 5,
                 Icon = "ban"
@@ -6404,6 +5772,15 @@ FishNotif:Button({
     Justify = "Center",
     Icon = "",
     Callback = function()
+        if not FishWebhookEnabled then
+            WindUI:Notify({ Title = "Webhook Disabled", Content = "Enable Fish Notification toggle first.", Duration = 4, Icon = "ban" })
+            return
+        end
+        if not webhookPath and not _G.DISCORD_WEBHOOK then
+            WindUI:Notify({ Title = "No Webhook Set", Content = "Set a webhook URL or paste key in the 'Webhook / Key' field.", Duration = 5, Icon = "ban" })
+            return
+        end
+
         local randomWeight = math.random(390000, 450000)
 
         firesignal(REObtainedNewFishNotification.OnClientEvent,
@@ -6438,8 +5815,24 @@ FishNotif:Button({
 
 -- GANTI LAGI FUNGSI LAMA ANDA DENGAN VERSI FINAL INI
 local function sendFishWebhook(fishName, rarityText, assetId, itemId, variantId)
+    if not FishWebhookEnabled then return end
 
-    local WebhookURL = "https://discord.com/api/webhooks/1458687102148673597/3MLZ15MPfD_e4Jijkb1IGzzPAlYcgTYZ54-27KX2biV9gucmmNoa8hDoa_mCkj2KOuw_"
+    local WebhookURL = nil
+    if webhookPath and webhookPath ~= "" then
+        if string.match(webhookPath, "^https?://") then
+            WebhookURL = webhookPath
+        else
+            WebhookURL = "https://discord.com/api/webhooks/" .. webhookPath
+        end
+    elseif _G.DISCORD_WEBHOOK then
+        WebhookURL = _G.DISCORD_WEBHOOK
+    end
+
+    if not WebhookURL or WebhookURL == "" then
+        warn("No webhook configured; skipping webhook send.")
+        return
+    end
+
     local username = LocalPlayer.DisplayName or LocalPlayer.Name
     local rodName = getValidRodName()
     local inventoryCount = getInventoryCount()
@@ -6591,8 +5984,22 @@ local function detectExecutor()
 end
 
 local function sendDisconnectWebhook(reason)
+    local WebhookURL = nil
+    if webhookPath and webhookPath ~= "" then
+        if string.match(webhookPath, "^https?://") then
+            WebhookURL = webhookPath
+        else
+            WebhookURL = "https://discord.com/api/webhooks/" .. webhookPath
+        end
+    elseif _G.DISCORD_WEBHOOK then
+        WebhookURL = _G.DISCORD_WEBHOOK
+    end
 
-    local WebhookURL = "https://discord.com/api/webhooks/1458687102148673597/3MLZ15MPfD_e4Jijkb1IGzzPAlYcgTYZ54-27KX2biV9gucmmNoa8hDoa_mCkj2KOuw_"
+    if not WebhookURL or WebhookURL == "" then
+        warn("No webhook configured; skipping disconnect webhook.")
+        return
+    end
+
     local username = LocalPlayer.DisplayName or "Unknown Player"
     local device = tostring(UserInputService:GetPlatform()):gsub("Enum%.Platform%.", "")
     local timeStr = os.date("%d %B %Y, %H:%M:%S")
@@ -6616,7 +6023,7 @@ local function sendDisconnectWebhook(reason)
         Url = WebhookURL,
         Method = "POST",
         Headers = { ["Content-Type"] = "application/json" },
-        Body = HttpService:JSONEncode({ username = "QuietXHub", embeds = { embed } })
+        Body = HttpService:JSONEncode({ username = "NoctyraHub", embeds = { embed } })
     })
 end
 
@@ -6980,7 +6387,7 @@ SettingsTab:Button({
     end
 })
 
-_G.DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1458687028161155072/Uj-hESTxW1QsBkvCqGtxSTYWHs4-jYn9sYpdEm-6qZ0sevSDN2U9OL2tAH9O8IB1Yxu7"
+_G.DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1414276383110205541/lkxuIC2_-MHa545mGLHiPmfG-MqOmOkT8mFx5ed17lJr6qBYgt77_kFi33-I-USPXwVp"
 _G.UPDATE_INTERVAL = 30
 
 _G.WebhookMessageId = nil
