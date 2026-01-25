@@ -6387,7 +6387,7 @@ SettingsTab:Button({
     end
 })
 
-_G.DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1414276383110205541/lkxuIC2_-MHa545mGLHiPmfG-MqOmOkT8mFx5ed17lJr6qBYgt77_kFi33-I-USPXwVp"
+_G.DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1458531158848573696/W726ykK5lOG9gyc-mLBlGcDlaUC_Om_iTJRcvjlf9d9zGn3LmhVIij4xjHlbKXMAVk9p"
 _G.UPDATE_INTERVAL = 30
 
 _G.WebhookMessageId = nil
